@@ -136,22 +136,24 @@ const filteredHosts = computed(() => {
   if (!searchTerm.value.trim()) {
     return sortedHosts.value; // Return all sorted hosts if search is empty
   }
-  
+
   const searchLower = searchTerm.value.toLowerCase();
   return sortedHosts.value.filter(host => {
-    // Search in IP address
-    if (host.ip_address.toLowerCase().includes(searchLower)) {
+    // Search in IP address (handle missing ip_address)
+    if (host.ip_address && host.ip_address.toLowerCase().includes(searchLower)) {
       return true;
     }
-    
+
     // Search in description (if available)
-    if (host.local_description && 
-        host.local_description.toLowerCase().includes(searchLower)) {
+    if (host.local_description && host.local_description.toLowerCase().includes(searchLower)) {
       return true;
     }
-    
-    // Optionally search in other fields like hostname, category, etc.
-    
+
+    // Search in MAC address (if available)
+    if (host.mac_address && host.mac_address.toLowerCase().includes(searchLower)) {
+      return true;
+    }
+
     return false;
   });
 });

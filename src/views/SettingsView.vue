@@ -913,6 +913,15 @@ const configurationDefinitions: ConfigurationDefinition[] = [
     default: "Disabled",
     suggested: "Disabled",
   },
+  {
+    category: "HomelabIDS Collaboration",
+    displayName: "Write New Flows to CSV",
+    type: "Boolean/Toggle",
+    key: "WriteNewFlowsToCsv",
+    details: "Enable or disable writing new flows to a csv for debugging purposes. CSV file gets written to /database volume",
+    default: "Disabled",
+    suggested: "Disabled",
+  },
   // OTHER NETWORKS
   {
     category: "Other Networks",

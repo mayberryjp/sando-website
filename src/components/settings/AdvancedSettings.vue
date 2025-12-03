@@ -77,11 +77,29 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
+
+    <!-- Configuration Details Section -->
+    <div class="maintenance-action mt-8">
+      <h3>Configuration Details</h3>
+      <v-card flat color="transparent" class="pa-2">
+        <v-row>
+          <v-col
+            cols="12"
+            v-for="item in displayedConfig"
+            :key="item.key"
+            class="py-1"
+          >
+            <strong>{{ item.key }}:</strong> <span>{{ item.value }}</span>
+          </v-col>
+        </v-row>
+      </v-card>
+    </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
+import { ref, onMounted, computed } from "vue";
+import api from "@/services/api";
 import { deleteAllAlerts as deleteAllAlertsService, forceThreatCollection } from "@/services/alerts";
 import { useNotificationStore } from "@/stores/notification";
 
@@ -129,6 +147,33 @@ const recalculateThreatScores = async () => {
     recalculateScoresDialog.value = false;
   }
 };
+
+// Configuration details
+const configDetails = ref<Array<{ key: string; value: any }>>([]);
+
+const keysToShow = [
+  "Version",
+  "DatabaseSchemaVersion",
+  "SiteName",
+  // Add more keys as needed
+];
+
+const displayedConfig = computed(() =>
+  configDetails.value.filter(item => keysToShow.includes(item.key))
+);
+
+onMounted(async () => {
+  try {
+    const res = await api.get("/configurations");
+    if (Array.isArray(res.data)) {
+      configDetails.value = res.data;
+    } else {
+      configDetails.value = [];
+    }
+  } catch (e) {
+    configDetails.value = [{ key: "Version", value: "Unavailable" }];
+  }
+});
 </script>
 
 <style scoped>

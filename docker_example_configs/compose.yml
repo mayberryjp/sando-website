@@ -1,13 +1,13 @@
 version: "3"
 services:
-  homelabids-website:
+  sando-website:
     network_mode: host
-    container_name: homelabids-website
+    container_name: sando-website
     restart: "unless-stopped"
-    image: homelabids-website:latest
+    image: sando-website:latest
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-      - /docker/homelabids-website:/database
+      - /docker/sando-website:/database
     environment: 
       - TZ=Asia/Tokyo
-      - HOMELABIDS_API_BASE_URL=http://192.168.49.80:8044
+      - SANDO_API_BASE_URL=http://192.168.49.80:8044

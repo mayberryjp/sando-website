@@ -37,6 +37,23 @@
             This may take a few minutes to complete.
           </p>
         </div>
+
+        <!-- Export Localhosts Button -->
+        <div class="maintenance-action mt-6">
+          <v-btn
+            color="secondary"
+            variant="elevated"
+            min-width="260"
+            elevation="2"
+            prepend-icon="mdi-download"
+            @click="exportLocalhosts"
+          >
+            Export Localhosts CSV
+          </v-btn>
+          <p class="text-body-2 mt-2">
+            Download a CSV export of all localhosts.
+          </p>
+        </div>
       </div>
     </div>
 
@@ -103,6 +120,9 @@ import api from "@/services/api";
 import { deleteAllAlerts as deleteAllAlertsService, forceThreatCollection } from "@/services/alerts";
 import { useNotificationStore } from "@/stores/notification";
 
+// Get SANDO_API_URL from environment variables
+const SANDO_API_URL = import.meta.env.VITE_API_BASE_URL || "";
+
 // State management
 const isDeleteAlertsLoading = ref(false);
 const isRecalculatingScores = ref(false);
@@ -146,6 +166,11 @@ const recalculateThreatScores = async () => {
     isRecalculatingScores.value = false;
     recalculateScoresDialog.value = false;
   }
+};
+
+// Export Localhosts CSV
+const exportLocalhosts = () => {
+  window.open(`${SANDO_API_URL}/api/localhosts/csv`, "_blank");
 };
 
 // Configuration details

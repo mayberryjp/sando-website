@@ -239,7 +239,7 @@ import LocalNetworksConfig from "@/components/settings/configurations/LocalNetwo
 import ProcessingSection from "@/components/settings/configurations/ProcessingSection.vue";
 import DiscoverySection from "@/components/settings/configurations/DiscoverySection.vue";
 import FilteringSection from "@/components/settings/configurations/FilteringSection.vue";
-import SandoCollaborationSection from "@/components/settings/configurations/SandoCollaborationSection.vue";
+import HomelabIDSCollaborationSection from "@/components/settings/configurations/HomelabIDSCollaborationSection.vue";
 import { getConfigurations, updateConfiguration } from "@/services/settings";
 import type {
   ConfigurationDefinition,

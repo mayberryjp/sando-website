@@ -16,7 +16,7 @@
 
           <v-tab value="discovery">Discovery</v-tab>
           <v-tab value="filtering">Filtering</v-tab>
-          <v-tab value="homelab-ids">Collaboration</v-tab>
+          <v-tab value="collaboration">Collaboration</v-tab>
           <!-- Advanced -->
           <v-tab value="advanced">Advanced</v-tab>
         </v-tabs>
@@ -193,13 +193,13 @@
               ></v-progress-circular>
             </v-window-item>
 
-            <!-- Sando Collaboration Settings -->
-            <v-window-item value="homelab-ids">
+            <!-- Collaboration Settings -->
+            <v-window-item value="collaboration">
               <h3>Collaboration</h3>
               <v-divider class="my-4"></v-divider>
-              <homelab-i-d-s-collaboration-section
-                v-if="groupedConfigurations['Sando Collaboration']"
-                :settings="groupedConfigurations['Sando Collaboration']"
+                <CollaborationSection
+                v-if="groupedConfigurations['Collaboration']"
+                :settings="groupedConfigurations['Collaboration']"
                 :updating-configs="updatingConfigs"
                 @updateConfigurationValue="updateConfigurationValue"
                 standalone
@@ -875,8 +875,6 @@ const configurationDefinitions: ConfigurationDefinition[] = [
     default: "Enabled",
     suggested: "Enabled",
   },
-
-  // Sando Collaboration
   {
     category: "Collaboration",
     displayName: "Send Errors to Cloud API",

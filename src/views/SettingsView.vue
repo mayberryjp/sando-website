@@ -624,7 +624,7 @@ const configurationDefinitions: ConfigurationDefinition[] = [
     type: "Boolean/Toggle",
     key: "EnableLocalDiscoveryProcess",
     details: "Enable or disable the local device discovery process that identifies devices on the network and information about them.",
-    default: "Enabled",
+    default: "Disabled",
     suggested: "Enabled",
   },
   {
@@ -669,7 +669,7 @@ const configurationDefinitions: ConfigurationDefinition[] = [
     type: "Boolean/Toggle",
     key: "PerformDnsResponseLookupsForInvestigations",
     details: "Perform DNS lookups for domains that your hosts query in order to resolve them to IP addresses for investigations.",
-    default: "Enabled",
+    default: "Disabled",
     suggested: "Enabled",
   },
 
@@ -797,7 +797,7 @@ const configurationDefinitions: ConfigurationDefinition[] = [
     displayName: "PiHole URL",
     type: "Text/String",
     key: "PiholeUrl",
-    details: "URL of the PiHole instance to fetch DNS query history and other data from. This is used to integrate with PiHole for DNS query history.",
+    details: "URL of the PiHole instance to fetch DNS query history and other data from. This is used to integrate with PiHole for DNS query history. Only Pihole v6 is supported.",
     default: "",
     suggested: "http://pihole.local/api",
   },

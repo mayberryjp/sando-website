@@ -14,6 +14,7 @@
           label="CIDR"
           variant="outlined"
           density="comfortable"
+          hint="e.g: 10.1.10.0/24"
           clearable
         />
       </v-col>
@@ -41,6 +42,7 @@
           label="TTL"
           variant="outlined"
           density="comfortable"
+          hint="Seconds, e.g: 3600 for one hour"
           clearable
         />
       </v-col>

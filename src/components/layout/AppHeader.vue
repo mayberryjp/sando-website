@@ -27,7 +27,7 @@
 
       <!-- GitHub Issues Link -->
       <v-btn
-        href="https://github.com/mayberryjp/homelabids/issues"
+        href="https://github.com/mayberryjp/sando/issues"
         target="_blank"
         rel="noopener noreferrer"
         variant="text"

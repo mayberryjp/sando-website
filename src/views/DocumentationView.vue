@@ -22,10 +22,10 @@
     <v-divider class="mb-6"></v-divider>
 
     <v-expansion-panels multiple>
-      <v-expansion-panel title="What is HomeLabIDS?">
+      <v-expansion-panel title="What is Sando?">
         <v-expansion-panel-text>
           <p>
-            <strong>HomeLabIDS</strong> is the most robust open-source security tool for your home lab. HomelabIDS monitors network traffic through your firewall or router and detects potentially malicious traffic. It gives you complete control and visibility to your network security. HomeLabIDS integrate with popular home lab platforms like PfSense and Pihole.
+            <strong>Sando</strong> is a robust network security & monitoring platform. Sando monitors network traffic through your firewall or router and detects potentially malicious traffic. It gives you complete control and visibility to your network security. Sando integrate with popular platforms like PfSense and Pihole.
           </p>
         </v-expansion-panel-text>
       </v-expansion-panel>
@@ -57,7 +57,7 @@
       <v-expansion-panel title="Does Netflow increase load on my router/firewall?">
         <v-expansion-panel-text>
           <p>
-             We haven't observed any negative impact at normal homelab traffic rates.
+             We haven't observed any negative impact at normal netowrk traffic rates.
           </p>
         </v-expansion-panel-text>
       </v-expansion-panel>
@@ -65,7 +65,7 @@
       <v-expansion-panel title="What interfaces should I monitor and what netflow export interval?">
         <v-expansion-panel-text>
           <p>
-             We recommend exporting flows every minute. We recommend monitoring only the LAN interfaces.
+             We recommend exporting flows every minute. We recommend monitoring any interface that you want to monitor hosts and network traffic.
           </p>
         </v-expansion-panel-text>
       </v-expansion-panel>
@@ -98,7 +98,7 @@
           <ul>
             <li>If data is missing, try refreshing the page or check your network connection.</li>
             <li>For persistent issues, consult the browser console for errors or contact your system administrator.</li>
-            <li>Issues and feature requests can be submitted from the link at the top of the HomelabIDS dashboard.</li>
+            <li>Issues and feature requests can be submitted from the link at the top of the Sando dashboard.</li>
           </ul>
         </v-expansion-panel-text>
       </v-expansion-panel>
@@ -111,24 +111,25 @@
         </v-expansion-panel-text>
       </v-expansion-panel>
 
-      <v-expansion-panel title="Why do I see HomelabIDS making outbound connections to the Internet?">
+      <v-expansion-panel title="Why do I see Sando making outbound connections to the Internet?">
         <v-expansion-panel-text>
           <p>
-            HomelabIDS may make outbound connections for various reasons, including: communicating with our central API, downloading GeoIP data or reputation databases. These are all optional features that can be disabled in Settings.
+            Sando may make outbound connections for various reasons, including: communicating with our central API, downloading GeoIP data or reputation databases. These are all optional features that can be disabled in Settings.
           </p>
         </v-expansion-panel-text>
       </v-expansion-panel>
 
-      <v-expansion-panel title="What are the default ports that need to be exposed for HomelabIDS to work?">
+      <v-expansion-panel title="What are the default ports that need to be exposed for Sando to work?">
         <v-expansion-panel-text>
           <p>
-            The default ports that need to be exposed for HomeLabIDS to work are:
+            The default ports that need to be exposed for Sando to work are:
           </p>
           <ul>
-            <li>HomelabIDS Dashboard: TCP/3030</li>
-            <li>HomelabIDS Netflow Collector: UDP/2055</li>
-            <li>HomelabIDS Local API: TCP/8044</li>
-            <li>HomelabIDS Sinkhole DNS server (optional feature): TCP & UDP: 53</li>
+            <li>Sando Dashboard: TCP/3030</li>
+            <li>Sando Netflow Collector: UDP/2055</li>
+            <li>Sando Local API: TCP/8044</li>
+            <li>Sando Sinkhole DNS server (optional feature): TCP & UDP: 53</li>
+            <li>Sando DHCP server (optional feature): UDP: 67</li>
           </ul>
         </v-expansion-panel-text>
       </v-expansion-panel>
@@ -152,7 +153,7 @@
       <v-expansion-panel title="The actions bell is saying there's an issue. What should I do?">
         <v-expansion-panel-text>
           <p>
-            If it's not happening often then it may just be a transient issue you can acknowledge and ignore. If you see it happening very frequently then we suggest opting into all feature on the HomeLabsIDS Collaboration page in Settings. You can also follow the Submit Issue button in the navbar. 
+            If it's not happening often then it may just be a transient issue you can acknowledge and ignore. If you see it happening very frequently then we suggest opting into all feature on the Collaboration page in Settings. You can also follow the Submit Issue button in the navbar. 
           </p>
         </v-expansion-panel-text>
       </v-expansion-panel>
@@ -223,10 +224,10 @@
       </v-expansion-panel>
 
 
-      <v-expansion-panel title="I use VLANs with restrictive outbound firewall rules. Do I really need HomelabIDS?">
+      <v-expansion-panel title="I use VLANs with restrictive outbound firewall rules. Do I really need Sando?">
         <v-expansion-panel-text>
           <p>
-            Sure! We offer other interesting features like device identification, DNS profiling, network traffic stats, etc. HomeLabIDS can act as a source of truth for what's on your homelab network!
+            Sure! We offer other interesting features like device identification, DNS profiling, DHCP Relay server, network traffic stats, etc. Sando can act as a source of truth for what's on your network!
           </p>
         </v-expansion-panel-text>
       </v-expansion-panel>
@@ -266,7 +267,7 @@
       <v-expansion-panel title="What's the purpose of the management link under edit host?">
         <v-expansion-panel-text>
           <p>
-            This allows you to access a device's management website via HomeLabIDS. It's just a convenient feature that may be useful during the investigation process. 
+            This allows you to access a device's management website via Sando. It's just a convenient feature that may be useful during the investigation process. 
           </p>
         </v-expansion-panel-text>
       </v-expansion-panel>
@@ -303,7 +304,7 @@
         </v-expansion-panel-text>
       </v-expansion-panel>
 
-      <v-expansion-panel title="Can I aggregrate many sites into one HomelabIDS instance?">
+      <v-expansion-panel title="Can I aggregrate many sites into one Sando instance?">
         <v-expansion-panel-text>
           <p>
             Probably, but we don't test in this topology so try and let us know how it works. You'll probably want to disable local flows detections. 
@@ -311,7 +312,7 @@
         </v-expansion-panel-text>
       </v-expansion-panel>
 
-      <v-expansion-panel title="I have other private and remote networks in my home lab that don't show up in Flow Explorer correctly.">
+      <v-expansion-panel title="I have other private and remote networks in my network that don't show up in Flow Explorer correctly.">
         <v-expansion-panel-text>
           <p>
             You can define other private networks in the Settings 'Other Networks' page. Multiple Other Networks are supported. Please follow the configuration instructions on that page. 
@@ -322,7 +323,7 @@
       <v-expansion-panel title="I don't understand these NTP and DNS settings. Can you explain it?">
         <v-expansion-panel-text>
           <p>
-            Many homelabs have their own DNS and NTP environment to maintain consistent time. For example, Pihole and Chrony are popular docker containers for DNS and NTP. HomelabIDS supports the ability to detect devices that aren't using your local DNS and NTP infrastructure as one of its detections. You can set your local DNS and NTP servers in Settings. You can also configure Pihole and Chrony to use specific public caching DNS servers and stratum NTP servers. This ensures those applications are only using the servers you want them to use. 
+            Many networks have their own DNS and NTP environment to maintain consistent time. For example, Pihole and Chrony are popular docker containers for DNS and NTP. Sando supports the ability to detect devices that aren't using your local DNS and NTP infrastructure as one of its detections. You can set your local DNS and NTP servers in Settings. You can also configure Pihole and Chrony to use specific public caching DNS servers and stratum NTP servers. This ensures those applications are only using the servers you want them to use. 
           </p>
         </v-expansion-panel-text>
       </v-expansion-panel>
@@ -354,7 +355,7 @@
       <v-expansion-panel title="Do you support a mechanism to do automated deployments and centralized configuration management?">
         <v-expansion-panel-text>
           <p>
-            Yes. You can set a sitename in the docker environment variable. Please see our example docker configs. You can then create a file in your docker volume for HomelabIDS called $SITE.py. This can contain all of the site configurations. The SITE config file will override any manually made settings at every restart. There is an example SITE.py file in our Github repository. 
+            Yes. You can set a sitename in the docker environment variable. Please see our example docker configs. You can then create a file in your docker volume for Sando called $SITE.py. This can contain all of the site configurations. The SITE config file will override any manually made settings at every restart. There is an example SITE.py file in our Github repository. 
           </p>
         </v-expansion-panel-text>
       </v-expansion-panel>
@@ -362,7 +363,7 @@
       <v-expansion-panel title="Do you have any community websites?">
         <v-expansion-panel-text>
           <p>
-            YYes! We are r/homelabids on Reddit. 
+            Yes! We are r/SandoSecurityAndDhcp on Reddit. 
           </p>
         </v-expansion-panel-text>
       </v-expansion-panel>
@@ -402,7 +403,7 @@
       <v-expansion-panel title="Can the website and backend be on seperate docker hosts?">
         <v-expansion-panel-text>
           <p>
-             Yes, it should be supported. Please review the example docker compose file in our Github repo for homelabids-website.
+             Yes, it should be supported. Please review the example docker compose file in our Github repo for sando-website.
           </p>
         </v-expansion-panel-text>
       </v-expansion-panel>
@@ -426,7 +427,7 @@
       <v-expansion-panel title="Why don't you support better application security?">
         <v-expansion-panel-text>
           <p>
-            At the moment we don't support authentication or HTTPS and our API is not secured. We may improve this in the future. We expect people to run this locally and access it via their homelab network directly or over a secure VPN. We don't recommend exposing HomelabIDS to the Internet.  
+            At the moment we don't support authentication or HTTPS and our API is not secured. We may improve this in the future. We expect people to run this locally and access it via their network directly or over a secure VPN. We don't recommend exposing Sando to the Internet.  
           </p>
         </v-expansion-panel-text>
       </v-expansion-panel>
@@ -458,7 +459,7 @@
 
       <v-expansion-panel title="Do you integrate with Pihole?">
         <v-expansion-panel-text>
-          <p>Yes! HomeLabIDS integrates with Pihole to provide enhanced discovery of your local network. HomeLabIDS can learn about network devices via the DHCP and network devices API as well as match traffic patterns to DNS queries. We only support the Pihole v6 API.</p>
+          <p>Yes! Sando integrates with Pihole to provide enhanced discovery of your local network. Sando can learn about network devices via the DHCP and network devices API as well as match traffic patterns to DNS queries. We only support the Pihole v6 API.</p>
       
         </v-expansion-panel-text>
       </v-expansion-panel>
@@ -491,7 +492,7 @@
       <v-expansion-panel title="About">
         <v-expansion-panel-text>
           <p>
-            HomeLabIDS is an open-source project. For more information, visit the <a href="https://github.com/mayberryjp/homelabids" target="_blank">GitHub repository</a>. For contact by email please email homelabids@gmail.com.
+            Sando is an open-source project. For more information, visit the <a href="https://github.com/mayberryjp/sando" target="_blank">GitHub repository</a>. For contact by email please email homelabids@gmail.com.
           </p>
         </v-expansion-panel-text>
       </v-expansion-panel>

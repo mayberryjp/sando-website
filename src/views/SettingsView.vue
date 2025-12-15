@@ -193,13 +193,13 @@
               ></v-progress-circular>
             </v-window-item>
 
-            <!-- HomelabIDS Collaboration Settings -->
+            <!-- Sando Collaboration Settings -->
             <v-window-item value="homelab-ids">
               <h3>Collaboration</h3>
               <v-divider class="my-4"></v-divider>
               <homelab-i-d-s-collaboration-section
-                v-if="groupedConfigurations['HomelabIDS Collaboration']"
-                :settings="groupedConfigurations['HomelabIDS Collaboration']"
+                v-if="groupedConfigurations['Sando Collaboration']"
+                :settings="groupedConfigurations['Sando Collaboration']"
                 :updating-configs="updatingConfigs"
                 @updateConfigurationValue="updateConfigurationValue"
                 standalone
@@ -239,7 +239,7 @@ import LocalNetworksConfig from "@/components/settings/configurations/LocalNetwo
 import ProcessingSection from "@/components/settings/configurations/ProcessingSection.vue";
 import DiscoverySection from "@/components/settings/configurations/DiscoverySection.vue";
 import FilteringSection from "@/components/settings/configurations/FilteringSection.vue";
-import HomelabIDSCollaborationSection from "@/components/settings/configurations/HomelabIDSCollaborationSection.vue";
+import SandoCollaborationSection from "@/components/settings/configurations/SandoCollaborationSection.vue";
 import { getConfigurations, updateConfiguration } from "@/services/settings";
 import type {
   ConfigurationDefinition,
@@ -876,36 +876,36 @@ const configurationDefinitions: ConfigurationDefinition[] = [
     suggested: "Enabled",
   },
 
-  // HomelabIDS Collaboration
+  // Sando Collaboration
   {
-    category: "HomelabIDS Collaboration",
+    category: "Sando Collaboration",
     displayName: "Send Errors to Cloud API",
     type: "Boolean/Toggle",
     key: "SendErrorsToCloudApi",
-    details: "Enable or disable sending error logs to the HomelabIDS cloud API so code owners can proactively triage bugs.",
+    details: "Enable or disable sending error logs to the Sando cloud API so code owners can proactively triage bugs.",
     default: "Disabled",
     suggested: "Enabled",
   },
   {
-    category: "HomelabIDS Collaboration",
+    category: "Sando Collaboration",
     displayName: "Send Device Classifications to Cloud API",
     type: "Boolean/Toggle",
     key: "SendDeviceClassificationsToHomelabApi",
-    details: "Enable or disable sending device classifications to the HomelabIDS cloud API to help support auto-device classification data set.",
+    details: "Enable or disable sending device classifications to the Sando cloud API to help support auto-device classification data set.",
     default: "Disabled",
     suggested: "Enabled", 
   },
   {
-    category: "HomelabIDS Collaboration",
+    category: "Sando Collaboration",
     displayName: "Send Configuration To Cloud API",
     type: "Boolean/Toggle",
     key: "SendConfigurationToCloudApi",
-    details: "Enable or disable sending configuration data to the HomelabIDS cloud API to help support the project feature investments and deployment decisions.",
+    details: "Enable or disable sending configuration data to the Sando cloud API to help support the project feature investments and deployment decisions.",
     default: "Disabled",
     suggested: "Enabled",
   },
   {
-    category: "HomelabIDS Collaboration",
+    category: "Sando Collaboration",
     displayName: "Write Daily Logfile for Debugging",
     type: "Boolean/Toggle",
     key: "WriteLogFile",
@@ -914,7 +914,7 @@ const configurationDefinitions: ConfigurationDefinition[] = [
     suggested: "Disabled",
   },
   {
-    category: "HomelabIDS Collaboration",
+    category: "Sando Collaboration",
     displayName: "Write New Flows to CSV",
     type: "Boolean/Toggle",
     key: "WriteNewFlowsToCsv",

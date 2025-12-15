@@ -15,6 +15,7 @@
           variant="outlined"
           density="comfortable"
           hint="e.g: 10.1.10.0/24"
+          persistent-hint
           clearable
         />
       </v-col>
@@ -24,6 +25,8 @@
           label="Router IP Address"
           variant="outlined"
           density="comfortable"
+          hint="Default gateway IP address"
+          persistent-hint 
           clearable
         />
       </v-col>
@@ -33,6 +36,8 @@
           label="Domain Name"
           variant="outlined"
           density="comfortable"
+          persistent-hint
+          hint="e.g: contoso.com"
           clearable
         />
       </v-col>
@@ -43,6 +48,7 @@
           variant="outlined"
           density="comfortable"
           hint="Seconds, e.g: 3600 for one hour"
+          persistent-hint
           clearable
         />
       </v-col>

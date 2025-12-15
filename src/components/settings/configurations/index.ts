@@ -8,4 +8,4 @@ export { default as ProcessesSection } from "./ProcessesSection.vue";
 export { default as ProcessingSection } from "./ProcessingSection.vue";
 export { default as DiscoverySection } from "./DiscoverySection.vue";
 export { default as FilteringSection } from "./FilteringSection.vue";
-export { default as HomelabIDSCollaborationSection } from "./HomelabIDSCollaborationSection.vue";
+export { default as CollaborationSection } from "./CollaborationSection.vue";

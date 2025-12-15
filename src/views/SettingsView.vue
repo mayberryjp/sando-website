@@ -239,7 +239,7 @@ import LocalNetworksConfig from "@/components/settings/configurations/LocalNetwo
 import ProcessingSection from "@/components/settings/configurations/ProcessingSection.vue";
 import DiscoverySection from "@/components/settings/configurations/DiscoverySection.vue";
 import FilteringSection from "@/components/settings/configurations/FilteringSection.vue";
-import HomelabIDSCollaborationSection from "@/components/settings/configurations/HomelabIDSCollaborationSection.vue";
+import CollaborationSection from "@/components/settings/configurations/CollaborationSection.vue";
 import { getConfigurations, updateConfiguration } from "@/services/settings";
 import type {
   ConfigurationDefinition,
@@ -878,7 +878,7 @@ const configurationDefinitions: ConfigurationDefinition[] = [
 
   // Sando Collaboration
   {
-    category: "Sando Collaboration",
+    category: "Collaboration",
     displayName: "Send Errors to Cloud API",
     type: "Boolean/Toggle",
     key: "SendErrorsToCloudApi",
@@ -887,7 +887,7 @@ const configurationDefinitions: ConfigurationDefinition[] = [
     suggested: "Enabled",
   },
   {
-    category: "Sando Collaboration",
+    category: "Collaboration",
     displayName: "Send Device Classifications to Cloud API",
     type: "Boolean/Toggle",
     key: "SendDeviceClassificationsToHomelabApi",
@@ -896,7 +896,7 @@ const configurationDefinitions: ConfigurationDefinition[] = [
     suggested: "Enabled", 
   },
   {
-    category: "Sando Collaboration",
+    category: "Collaboration",
     displayName: "Send Configuration To Cloud API",
     type: "Boolean/Toggle",
     key: "SendConfigurationToCloudApi",
@@ -905,7 +905,7 @@ const configurationDefinitions: ConfigurationDefinition[] = [
     suggested: "Enabled",
   },
   {
-    category: "Sando Collaboration",
+    category: "Collaboration",
     displayName: "Write Daily Logfile for Debugging",
     type: "Boolean/Toggle",
     key: "WriteLogFile",
@@ -914,7 +914,7 @@ const configurationDefinitions: ConfigurationDefinition[] = [
     suggested: "Disabled",
   },
   {
-    category: "Sando Collaboration",
+    category: "Collaboration",
     displayName: "Write New Flows to CSV",
     type: "Boolean/Toggle",
     key: "WriteNewFlowsToCsv",

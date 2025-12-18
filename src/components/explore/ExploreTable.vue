@@ -138,6 +138,7 @@ const getTimesSeenColor = (timesSeen: number) => {
 
 const getSourceDetails = (item: ExploreFlow) => {
   return (
+    item.src_sandoname?.trim() ||
     item.src_dns?.trim() ||
     item.src_isp?.trim() ||
     item.src_country?.trim() ||
@@ -147,7 +148,7 @@ const getSourceDetails = (item: ExploreFlow) => {
 
 const getDestinationDetails = (item: ExploreFlow) => {
   return (
-    
+    item.dst_sandoname?.trim() ||
     item.dst_dns?.trim() ||
     item.dst_isp?.trim() ||
     item.dst_country?.trim() ||

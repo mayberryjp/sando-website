@@ -24,6 +24,8 @@ export interface ExploreFlow {
   concat?: string;
   dst_dns?: string;
   src_dns?: string;
+  src_sandoname?: string;
+  dst_sandoname?: string;
 }
 
 export interface ExploreResponseData {

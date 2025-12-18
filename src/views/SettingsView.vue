@@ -540,7 +540,7 @@ const configurationDefinitions: ConfigurationDefinition[] = [
     type: "Text/Int",
     key: "MaxBytes",
     details: "Maximum number of bytes that can be sent within a time window to trigger high bandwidth alerts.",
-    default: "3000000",
+    default: "30000000",
     suggested: "At the discretion of the user, based on their network traffic patterns.",
   },
   {

@@ -147,6 +147,7 @@ const getSourceDetails = (item: ExploreFlow) => {
 
 const getDestinationDetails = (item: ExploreFlow) => {
   return (
+    
     item.dst_dns?.trim() ||
     item.dst_isp?.trim() ||
     item.dst_country?.trim() ||

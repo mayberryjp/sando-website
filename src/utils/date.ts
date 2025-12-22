@@ -22,14 +22,11 @@ export const formatDateTime = (
   }
 };
 
-export const formatDate = (dateStr: string | null): string => {
-  if (!dateStr) return "-";
-  try {
-    const date = new Date(dateStr);
-    return date.toISOString().split("T")[0];
-  } catch (e) {
-    return "-";
-  }
+export const formatDate = (dateStr: string | null | undefined): string => {
+  if (dateStr === null || dateStr === undefined) return "-";
+  if (typeof dateStr !== "string") return String(dateStr);
+  if (dateStr.trim() === "") return "-";
+  return dateStr;
 };
 
 export const formatRelativeTime = (dateString: string): string => {

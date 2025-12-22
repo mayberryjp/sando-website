@@ -44,13 +44,28 @@
         <div>{{ item.dst_ip }}</div>
       </template>
 
-      <template v-slot:item.last_seen="{ item }">
-        {{ formatDate(item.last_seen) }}
+      <template v-slot:item.max_last_seen="{ item }">
+        {{ formatDate(item.max_last_seen) }}
       </template>
 
       <!-- Bytes with formatting -->
-      <template v-slot:item.bytes="{ item }">
-        {{ formatBytes(item.bytes) }}
+      <template v-slot:item.sum_bytes="{ item }">
+        {{ formatBytes(item.sum_bytes) }}
+      </template>
+
+      <template v-slot:item.sum_packets="{ item }">
+        {{ item.sum_packets }}
+      </template>
+
+      <template v-slot:item.sum_times_seen="{ item }">
+        <v-chip
+          size="small"
+          :color="getTimesSeenColor(item.sum_times_seen)"
+          text-color="white"
+          class="text-caption"
+        >
+          {{ item.sum_times_seen }}
+        </v-chip>
       </template>
 
       <template v-slot:item.src_dns="{ item }">
@@ -63,18 +78,6 @@
         <span class="details-ellipsis" :title="getDestinationDetails(item)">
           {{ getDestinationDetails(item) }}
         </span>
-      </template>
-
-      <!-- Times seen with badge -->
-      <template v-slot:item.times_seen="{ item }">
-        <v-chip
-          size="small"
-          :color="getTimesSeenColor(item.times_seen)"
-          text-color="white"
-          class="text-caption"
-        >
-          {{ item.times_seen }}
-        </v-chip>
       </template>
     </v-data-table-server>
   </v-sheet>
@@ -106,13 +109,12 @@ const headers = computed(() => [
   { title: "Source Details", key: "src_dns", sortable: false },
   { title: "Destination IP", key: "dst_ip", sortable: false },
   { title: "Destination Details", key: "dst_dns", sortable: false },
-  { title: "Source Port", key: "src_port", sortable: false },
   { title: "Dest Port", key: "dst_port", sortable: false },
   { title: "Protocol", key: "protocol", sortable: false },
-  { title: "Last Seen", key: "last_seen", sortable: false },
-  { title: "Packets", key: "packets", sortable: false },
-  { title: "Bytes", key: "bytes", sortable: false },
-  { title: "Times Seen", key: "times_seen", sortable: false },
+  { title: "Last Seen", key: "max_last_seen", sortable: false },
+  { title: "Packets", key: "sum_packets", sortable: false },
+  { title: "Bytes", key: "sum_bytes", sortable: false },
+  { title: "Times Seen", key: "sum_times_seen", sortable: false },
 ]);
 
 const handleOptionsUpdate = ({

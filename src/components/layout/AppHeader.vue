@@ -128,7 +128,7 @@ const menuItems = ref([
 }
 
 .product-bar {
-  color: #F63F61;
+  color: #9E394F;
   font-weight: 700;
   font-size: 1.5rem !important;
   text-align: start;

@@ -3,10 +3,18 @@
   
       <!-- Product Logo and Name (Left Justified) -->
     <div class="product-branding d-flex align-center">
-      <router-link to="/" class="router-link">
-        <img src="/logo.png" alt="Product Logo" width="32px" height="32px" class="me-2" />
-        <span class="product-name text-h6">Sando</span>
-      </router-link>
+      <div style="display: flex; flex-direction: row; align-items: center;">
+        <router-link to="/" class="router-link" style="display: flex; align-items: center; height: 48px; margin-right: 12px;">
+          <img src="/logo.png" alt="Product Logo" width="32px" height="32px" style="margin: 0; align-self: center;" />
+        </router-link>
+        <div style="display: flex; flex-direction: column; align-items: flex-start; justify-content: center; height: 48px;">
+          <span class="product-name text-h6">Sando
+            <span class="product-bar">|</span>
+            <span class="know-your-network">Know Your Network</span>
+          </span>
+          
+        </div>
+      </div>
     </div>
 
     <v-spacer></v-spacer>
@@ -63,6 +71,16 @@ const menuItems = ref([
     icon: "mdi-view-dashboard",
     routeName: "dashboard",
   },
+  {
+    title: "Documentation",
+    icon: "mdi-book-open-page-variant",
+    routeName: "documentation",
+  },
+  { title: "Settings",
+    icon: "mdi-cog-outline",
+    routeName: "settings",
+  },
+  
 ]);
 </script>
 
@@ -72,16 +90,7 @@ const menuItems = ref([
   box-shadow: none !important;
 }
 
-.product-name {
-  color: #cf8e13;
-  font-weight: 700;
-  font-size: 1.5rem !important;
-  text-align: start;
-  line-height: 36px;
-  font-size: 24px;
-  text-size-adjust: 100%;
-  letter-spacing: 0.05em !important;
-}
+
 
 .v-app-bar {
   border-bottom: 0px !important;
@@ -105,6 +114,40 @@ const menuItems = ref([
   display: flex;
   align-items: center;
   text-decoration: none;
+}
+
+.know-your-network {
+  color: #9E394F;
+  font-weight: 700;
+  font-size: 1.5rem !important;
+  text-align: start;
+  line-height: 36px;
+  font-size: 24px;
+  text-size-adjust: 100%;
+  letter-spacing: 0.05em !important;
+}
+
+.product-bar {
+  color: #F63F61;
+  font-weight: 700;
+  font-size: 1.5rem !important;
+  text-align: start;
+  line-height: 36px;
+  font-size: 24px;
+  margin-right: 8px;
+  text-size-adjust: 100%;
+  letter-spacing: 0.05em !important;
+
+}
+.product-name {
+  color: #cf8e13;
+  font-weight: 700;
+  font-size: 1.5rem !important;
+  text-align: start;
+  line-height: 36px;
+  font-size: 24px;
+  text-size-adjust: 100%;
+  letter-spacing: 0.05em !important;
 }
 
 </style>

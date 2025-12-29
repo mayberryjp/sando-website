@@ -10,7 +10,7 @@
                 Sando
               </h1>
               <p class="text-h5 white--text mb-8">
-                Modern Network Management Platform
+                Know Your Network
               </p>
 
               <div class="d-flex flex-wrap justify-center">

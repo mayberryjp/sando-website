@@ -43,7 +43,7 @@
         rounded
       >
         <v-icon start>mdi-github</v-icon>
-        Submit Issues or Features
+        Requests & Roadmap
       </v-btn>
 
       <!-- Notification Bell Component -->

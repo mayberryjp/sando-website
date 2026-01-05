@@ -157,19 +157,19 @@
               <template v-if="localHostDetail">
                 <span class="traffic-summary-row">
                   <span class="traffic-summary-item">
-                    <v-icon size="18" color="primary" class="mr-1">mdi-arrow-up</v-icon>
+                    <v-icon size="18" color="orange" class="mr-1">mdi-arrow-up</v-icon>
                     Out Packets: {{ (localHostDetail.total_packets_src || 0).toLocaleString() }}
                   </span>
                   <span class="traffic-summary-item">
-                    <v-icon size="18" color="primary" class="mr-1">mdi-arrow-down</v-icon>
+                    <v-icon size="18" color="blue" class="mr-1">mdi-arrow-down</v-icon>
                     In Packets: {{ (localHostDetail.total_packets_dst || 0).toLocaleString() }}
                   </span>
                   <span class="traffic-summary-item">
-                    <v-icon size="18" color="success" class="mr-1">mdi-arrow-up-bold</v-icon>
+                    <v-icon size="18" color="orange" class="mr-1">mdi-arrow-up-bold</v-icon>
                     Out Bytes: {{ (localHostDetail.total_bytes_src || 0).toLocaleString() }} ({{ ((localHostDetail.total_bytes_src || 0) / 1073741824).toFixed(2) }} GB)
                   </span>
                   <span class="traffic-summary-item">
-                    <v-icon size="18" color="success" class="mr-1">mdi-arrow-down-bold</v-icon>
+                    <v-icon size="18" color="blue" class="mr-1">mdi-arrow-down-bold</v-icon>
                     In Bytes: {{ (localHostDetail.total_bytes_dst || 0).toLocaleString() }} ({{ ((localHostDetail.total_bytes_dst || 0) / 1073741824).toFixed(2) }} GB)
                   </span>
                 </span>

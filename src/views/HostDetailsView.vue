@@ -122,6 +122,7 @@
               :ip-address="ip_address"
               class="mb-4"
               :alerts_enabled="localHostDetail?.alerts_enabled"
+              :whitelisted="localHostDetail?.whitelisted"
               @edit="enterEditMode"
               @toggleAlert="fetchLocalhostDetail(ip_address)"
             />
@@ -152,7 +153,23 @@
             >
             <v-card-subtitle class="text-grey"
               >Displaying alerts, total bytes and packets over
-              time</v-card-subtitle
+              time
+              <template v-if="localHostDetail">
+                —
+                <span>
+                  Total Lifetime Packets:
+                  {{
+                    ((localHostDetail.total_packets_src || 0) +
+                    (localHostDetail.total_packets_dst || 0)).toLocaleString()
+                  }}
+                  | Total Lifetime Bytes:
+                  {{
+                    ((localHostDetail.total_bytes_src || 0) +
+                    (localHostDetail.total_bytes_dst || 0)).toLocaleString()
+                  }}
+                </span>
+              </template>              
+              </v-card-subtitle
             >
             <HostAlertsChart :traffic-stats="trafficStats" />
           </div>

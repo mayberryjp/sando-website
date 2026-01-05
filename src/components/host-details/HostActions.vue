@@ -12,6 +12,21 @@
         {{ alertsEnabled ? "Notifications Enabled" : "Notifications Disabled" }}
       </v-btn>
       <v-btn
+        :color="detectionsEnabled ? 'success' : 'error'"
+        @click="toggleDetections"
+        :loading="isTogglingDetections"
+        density="comfortable"
+        class="text-body-2"
+        style="margin-left: 8px;"
+      >
+        <v-icon
+          :icon="detectionsEnabled ? 'mdi-shield-check-outline' : 'mdi-shield-off-outline'"
+          class="mr-2"
+        ></v-icon>
+        {{ detectionsEnabled ? 'Detections Enabled' : 'Detections Disabled' }}
+      </v-btn>
+
+      <v-btn
         color="grey"
         @click="editHostDetails"
         density="comfortable"
@@ -68,7 +83,8 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from "vue";
+import { ref, computed, watch } from "vue";
+import { updateWhitelisted } from "@/services/hosts";
 import { useRouter } from "vue-router";
 import { deleteHost } from "@/services/hosts";
 import { useHostsStore } from "@/stores/hosts";
@@ -86,7 +102,18 @@ const props = defineProps({
     required: false,
     default: 0,
   },
+  whitelisted: {
+    type: Number,
+    required: false,
+    default: 0,
+  },
 });
+const whitelistedLocal = ref(props.whitelisted);
+watch(() => props.whitelisted, (val: number) => {
+  whitelistedLocal.value = val;
+});
+const detectionsEnabled = computed(() => whitelistedLocal.value === 0);
+const isTogglingDetections = ref(false);
 
 const router = useRouter();
 const hostsStore = useHostsStore();
@@ -102,7 +129,24 @@ const exportClientUrl = computed(() => `${apiBaseUrl}/api/client/${props.ipAddre
 const emit = defineEmits<{
   edit: [];
   toggleAlert: [];
+  toggleDetections: [];
 }>();
+const toggleDetections = async () => {
+  isTogglingDetections.value = true;
+  try {
+    const newDetectionsState = !detectionsEnabled.value;
+    whitelistedLocal.value = newDetectionsState ? 0 : 1; // Optimistically update
+    await updateWhitelisted(props.ipAddress, newDetectionsState ? 0 : 1);
+    emit('toggleDetections');
+    notificationStore.showSuccess(`Detections ${newDetectionsState ? 'enabled' : 'disabled'} for ${props.ipAddress}`);
+  } catch (error) {
+    console.error("Error toggling detections:", error);
+    notificationStore.showError("Failed to update detections setting");
+    whitelistedLocal.value = detectionsEnabled.value ? 0 : 1; // revert
+  } finally {
+    isTogglingDetections.value = false;
+  }
+};
 
 const editHostDetails = () => {
   emit('edit');
@@ -150,6 +194,21 @@ const confirmDelete = async () => {
 .host-actions {
   display: flex;
   align-items: center;
+}
+
+.icon-crossed {
+  position: relative;
+}
+.icon-crossed::after {
+  content: '';
+  position: absolute;
+  left: 2px;
+  top: 50%;
+  width: 80%;
+  height: 2px;
+  background: red;
+  transform: rotate(-20deg) translateY(-50%);
+  pointer-events: none;
 }
 
 .v-btn-group {

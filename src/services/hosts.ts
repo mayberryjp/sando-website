@@ -1,3 +1,12 @@
+export const updateWhitelisted = async (ip_address: string, whitelisted: number) => {
+  try {
+    const response = await api.put(`localhosts/${ip_address}/whitelisted-enabled`, { whitelisted });
+    return response;
+  } catch (error) {
+    console.error("Error updating whitelisted status:", error);
+    throw error;
+  }
+};
 import api from "./api";
 
 export const getLocalhosts = async () => {

@@ -295,7 +295,7 @@ const configurationDefinitions: ConfigurationDefinition[] = [
     type: "INT",
     key: "ForeignFlowsDetection",
     details: "Detects traffic from two non-local sources that are passing through the netflow source (firewall/router) which may be indicative of misconfigurations or unusual traffic patterns or the need to add additional local networks to the site configuration.",
-    default: "Enabled",
+    default: "Disabled",
     suggested: "Enabled",
   },
   {
@@ -304,7 +304,7 @@ const configurationDefinitions: ConfigurationDefinition[] = [
     type: "INT",
     key: "NewOutboundDetection",
     details: "Detects new outbound connections initiated by hosts on the network. This helps identify new external communications.",
-    default: "Enabled",
+    default: "Disabled",
     suggested: "Enabled",
   },
   {
@@ -313,7 +313,7 @@ const configurationDefinitions: ConfigurationDefinition[] = [
     type: "INT",
     key: "DeadConnectionDetection",
     details: "Detects TCP connections that don't receive a response after a certain period, indicating potential mis-configuration.",
-    default: "Enabled",
+    default: "Disabled",
     suggested: "Enabled",
   },
   {
@@ -322,7 +322,7 @@ const configurationDefinitions: ConfigurationDefinition[] = [
     type: "INT",
     key: "BypassLocalDnsDetection",
     details: "Detects DNS queries that bypass the local DNS server, which may indicate misconfiguration or attempts to evade local DNS policies.",
-    default: "Enabled",
+    default: "Disabled",
     suggested: "Enabled",
   },
   {
@@ -331,7 +331,7 @@ const configurationDefinitions: ConfigurationDefinition[] = [
     type: "INT",
     key: "BypassLocalNtpDetection",
     details: "Detects NTP requests that bypass the local NTP server, which may indicate misconfiguration or attempts to evade local NTP policies.",
-    default: "Enabled",
+    default: "Disabled",
     suggested: "Enabled",
   },
   {
@@ -340,7 +340,7 @@ const configurationDefinitions: ConfigurationDefinition[] = [
     type: "INT",
     key: "GeolocationFlowsDetection",
     details: "Detects traffic to or from countries that are on the banned country list, which may indicate potential current or future security risks.",
-    default: "Enabled",
+    default: "Disabled",
     suggested: "Enabled",
   },
   {
@@ -349,7 +349,7 @@ const configurationDefinitions: ConfigurationDefinition[] = [
     type: "INT",
     key: "IncorrectAuthoritativeDnsDetection",
     details: "Detects DNS queries from the local DNS servers that are directed at unintended external DNS servers",
-    default: "Enabled",
+    default: "Disabled",
     suggested: "Enabled",
   },
   {
@@ -358,7 +358,7 @@ const configurationDefinitions: ConfigurationDefinition[] = [
     type: "INT",
     key: "IncorrectNtpStratrumDetection",
     details: "Detects NTP requests from the local NTP servers that are directed at unintended external NTP servers",
-    default: "Enabled",
+    default: "Disabled",
     suggested: "Enabled",
   },
   {
@@ -367,7 +367,7 @@ const configurationDefinitions: ConfigurationDefinition[] = [
     type: "INT",
     key: "HighRiskPortDetection",
     details: "Detects traffic to or from high-risk ports that can be used for malware or data exfiltration.",
-    default: "Enabled",
+    default: "Disabled",
     suggested: "Enabled",
   },
   {
@@ -376,7 +376,7 @@ const configurationDefinitions: ConfigurationDefinition[] = [
     type: "INT",
     key: "ReputationListDetection",
     details: "Detects traffic to or from IP addresses that are on a reputation list and are known to be associated with malicious activity.",
-    default: "Enabled",
+    default: "Disabled",
     suggested: "Enabled",
   },
   {
@@ -385,7 +385,7 @@ const configurationDefinitions: ConfigurationDefinition[] = [
     type: "INT",
     key: "VpnTrafficDetection",
     details: "Detects traffic that is likely to be VPN traffic, which may indicate attempts to bypass local network policies.",
-    default: "Enabled",
+    default: "Disabled",
     suggested: "Enabled",
   },
   {
@@ -394,7 +394,7 @@ const configurationDefinitions: ConfigurationDefinition[] = [
     type: "INT",
     key: "PortScanDetection",
     details: "Detects port scanning activities that may indicate an attempt to find vulnerabilities in the network or hosts that are infected with malware.",
-    default: "Enabled",
+    default: "Disabled",
     suggested: "Enabled",
   },
   {
@@ -403,7 +403,7 @@ const configurationDefinitions: ConfigurationDefinition[] = [
     type: "INT",
     key: "ManyDestinationsDetection",
     details: "Detects traffic that is sent to many different destinations, which may indicate scanning or other suspicious activity.",
-    default: "Enabled",
+    default: "Disabled",
     suggested: "Enabled",
   },
   {
@@ -412,7 +412,7 @@ const configurationDefinitions: ConfigurationDefinition[] = [
     type: "INT",
     key: "HighBandwidthFlowDetection",
     details: "Detects flows that exceed a certain threshold of packets or bytes, which may indicate data exfiltration or other suspicious activity.",
-    default: "Enabled",
+    default: "Disabled",
     suggested: "Enabled",
   },
   {
@@ -421,10 +421,18 @@ const configurationDefinitions: ConfigurationDefinition[] = [
     type: "INT",
     key: "TorFlowDetection",
     details: "Detects traffic that is likely to be Tor traffic, which may indicate attempts to bypass local network policies.",
-    default: "Enabled",
+    default: "Disabled",
     suggested: "Enabled",
   },
-
+  {
+    category: "Detections",
+    displayName: "Bandwidth Anomaly Detection",
+    type: "INT",
+    key: "BandwidthAnomalyDetection",
+    details: "Detects bandwidth usage anomalies that deviate from normal patterns, which may indicate potential security issues or misconfigurations.",
+    default: "Disabled",
+    suggested: "Enabled",
+  },
   // Detection Fine Tuning
   {
     category: "Detection Fine Tuning",
@@ -569,6 +577,15 @@ const configurationDefinitions: ConfigurationDefinition[] = [
     details: "URL to the reputation list that should be used for detection. This is the location where the reputation list can be downloaded from.",
     default: "https://iplists.firehol.org/files/firehol_level1.netset",
     suggested: "https://iplists.firehol.org/files/firehol_level1.netset",
+  },
+    {
+    category: "Detection Fine Tuning",
+    displayName: "Bandwidth Anomaly Muliplier Threshold",
+    type: "Text/String",
+    key: "BandwidthAnomalyMuliplierThreshold",
+    details: "Multiplier threshold for detecting bandwidth anomalies. This value is multiplied by the average bandwidth usage to determine the threshold for anomaly detection.",
+    default: "10",
+    suggested: "10",
   },
   // Home Network
   {

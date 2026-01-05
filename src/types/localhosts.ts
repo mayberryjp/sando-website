@@ -18,4 +18,11 @@ export interface Localhost {
   threat_score: number;
   management_link: string;
   last_dhcp_discover: string;
+  last_seen: string | null;
+  total_packets_src: number;
+  total_packets_dst: number;
+  total_bytes_src: number;
+  total_bytes_dst: number;
+  ip6_address: string;
+  whitelisted: number;
 }

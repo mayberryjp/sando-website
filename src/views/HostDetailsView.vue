@@ -167,6 +167,10 @@
                     ((localHostDetail.total_bytes_src || 0) +
                     (localHostDetail.total_bytes_dst || 0)).toLocaleString()
                   }}
+                  ({{
+                    (((localHostDetail.total_bytes_src || 0) +
+                    (localHostDetail.total_bytes_dst || 0)) / 1073741824).toFixed(2)
+                  }} GB)
                 </span>
               </template>              
               </v-card-subtitle

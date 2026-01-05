@@ -151,30 +151,34 @@
             <v-card-title class="text-white"
               >Network Traffic Statistics</v-card-title
             >
-            <v-card-subtitle class="text-grey"
-              >Displaying alerts, total bytes and packets over
-              time
+            <v-card-subtitle
+              class="text-grey traffic-summary-full"
+              >Lifetime Traffic Summary:
               <template v-if="localHostDetail">
-                —
-                <span>
-                  Total Lifetime Packets:
-                  {{
-                    ((localHostDetail.total_packets_src || 0) +
-                    (localHostDetail.total_packets_dst || 0)).toLocaleString()
-                  }}
-                  | Total Lifetime Bytes:
-                  {{
-                    ((localHostDetail.total_bytes_src || 0) +
-                    (localHostDetail.total_bytes_dst || 0)).toLocaleString()
-                  }}
-                  ({{
-                    (((localHostDetail.total_bytes_src || 0) +
-                    (localHostDetail.total_bytes_dst || 0)) / 1073741824).toFixed(2)
-                  }} GB)
+                <span class="traffic-summary-row">
+                  <span class="traffic-summary-item">
+                    <v-icon size="18" color="primary" class="mr-1">mdi-arrow-up</v-icon>
+                    Out Packets: {{ (localHostDetail.total_packets_src || 0).toLocaleString() }}
+                  </span>
+                  <span class="traffic-summary-item">
+                    <v-icon size="18" color="primary" class="mr-1">mdi-arrow-down</v-icon>
+                    In Packets: {{ (localHostDetail.total_packets_dst || 0).toLocaleString() }}
+                  </span>
+                  <span class="traffic-summary-item">
+                    <v-icon size="18" color="success" class="mr-1">mdi-arrow-up-bold</v-icon>
+                    Out Bytes: {{ (localHostDetail.total_bytes_src || 0).toLocaleString() }} ({{ ((localHostDetail.total_bytes_src || 0) / 1073741824).toFixed(2) }} GB)
+                  </span>
+                  <span class="traffic-summary-item">
+                    <v-icon size="18" color="success" class="mr-1">mdi-arrow-down-bold</v-icon>
+                    In Bytes: {{ (localHostDetail.total_bytes_dst || 0).toLocaleString() }} ({{ ((localHostDetail.total_bytes_dst || 0) / 1073741824).toFixed(2) }} GB)
+                  </span>
                 </span>
-              </template>              
-              </v-card-subtitle
-            >
+              </template>
+            </v-card-subtitle>
+
+            <v-card-subtitle class="text-grey"
+              >Displaying alerts, total bytes and packets over recent time
+            </v-card-subtitle>
             <HostAlertsChart :traffic-stats="trafficStats" />
           </div>
           <v-card-text v-else class="text-center text-grey"
@@ -579,6 +583,31 @@ const handleTagsUpdated = (newTags: string | null) => {
   transition: background-color 0.2s ease;
   padding: 8px;
   margin: -8px;
+}
+
+/* Make traffic summary flex to full width */
+.traffic-summary-full {
+  width: 100%;
+  display: flex;
+  align-items: stretch;
+  flex: 1 1 100%;
+  width: 100%;
+  margin-bottom: 1.5rem;
+}
+.traffic-summary-row {
+  align-items: stretch;
+  display: flex;
+  flex: 1 1 100%;
+  flex-wrap: wrap;
+  align-self: stretch;
+  width: 100%;
+  gap: 1.5rem;
+  flex-grow: 1;
+  justify-content: space-between;
+}
+.traffic-summary-item {
+  display: flex;
+  align-items: center;
 }
 
 .device-management-link:hover {

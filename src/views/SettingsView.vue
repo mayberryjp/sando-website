@@ -433,6 +433,15 @@ const configurationDefinitions: ConfigurationDefinition[] = [
     default: "Disabled",
     suggested: "Enabled",
   },
+  {
+    category: "Detections",
+    displayName: "Rogue DHCP Detection",
+    type: "INT",
+    key: "RogueDhcpDetection",
+    details: "Detects rogue DHCP servers on the network that may be issuing unauthorized IP addresses, potentially enabling man-in-the-middle attacks or network disruptions.",
+    default: "Disabled",
+    suggested: "Enabled",
+  },
   // Detection Fine Tuning
   {
     category: "Detection Fine Tuning",
@@ -485,6 +494,15 @@ const configurationDefinitions: ConfigurationDefinition[] = [
     type: "Text/String",
     key: "ApprovedVpnServersList",
     details: "List of approved VPN endpoints on the Internet that your hosts may connect to. This is a comma separated list of IP addresses that your network devices should use to connect to VPN services.",
+    default: "",
+    suggested: "At the discretion of the user, based on their network configuration.",
+  },
+  {
+    category: "Detection Fine Tuning",
+    displayName: "Approved DHCP Servers List",
+    type: "Text/String",
+    key: "ApprovedDhcpServersList",
+    details: "List of approved DHCP servers on your network. Used with Rogue DHCP Detection. This is a comma separated list of IP addresses that are authorized to issue DHCP leases.",
     default: "",
     suggested: "At the discretion of the user, based on their network configuration.",
   },

@@ -24,7 +24,20 @@
             clearable
           />
 
-          <!-- MAC Address Field -->
+          <!-- IPv6 Address Field -->
+          <v-text-field
+            v-model="formData.ip6Address"
+            label="IPv6 Address"
+            variant="outlined"
+            density="comfortable"
+            class="mb-6"
+            prepend-inner-icon="mdi-ip"
+            hint="IPv6 address of this device"
+            persistent-hint
+            clearable
+          />
+
+           <!-- MAC Address Field -->
           <v-text-field
             v-model="formData.macAddress"
             label="MAC Address"
@@ -35,7 +48,7 @@
             hint="Physical MAC address of this device"
             persistent-hint
             clearable
-          />
+          />         
 
           <!-- Device Category Dropdown -->
           <v-select
@@ -224,6 +237,7 @@ const formData = ref({
   friendlyName: "",
   managementLink: "",
   macAddress: "",
+  ip6Address: "",
 });
 
 const originalData = ref({
@@ -232,6 +246,7 @@ const originalData = ref({
   friendlyName: "",
   managementLink: "",
   macAddress: "",
+  ip6Address: "",
 });
 
 const notificationStore = useNotificationStore();
@@ -243,7 +258,8 @@ const hasChanges = computed(() => {
     formData.value.category !== originalData.value.category ||
     formData.value.friendlyName !== originalData.value.friendlyName ||
     formData.value.managementLink !== originalData.value.managementLink ||
-    formData.value.macAddress !== originalData.value.macAddress
+    formData.value.macAddress !== originalData.value.macAddress ||
+    formData.value.ip6Address !== originalData.value.ip6Address
   );
 });
 
@@ -320,6 +336,7 @@ const initializeForm = () => {
     const managementLink = props.hostDetail.management_link || "";
     const category = props.hostDetail.icon || "";
     const macAddress = props.hostDetail.mac_address || "";
+    const ip6Address = props.hostDetail.ip6_address || "";
 
     formData.value = {
       ipAddress,
@@ -327,6 +344,7 @@ const initializeForm = () => {
       friendlyName,
       managementLink,
       macAddress,
+      ip6Address,
     };
 
     originalData.value = {
@@ -335,6 +353,7 @@ const initializeForm = () => {
       friendlyName,
       managementLink,
       macAddress,
+      ip6Address,
     };
   }
 };
@@ -351,6 +370,7 @@ const saveHost = async () => {
       management_link: formData.value.managementLink,
       icon: formData.value.category,
       mac_address: formData.value.macAddress,
+      ip6_address: formData.value.ip6Address,
     };
 
     // If IP address was changed, use MAC address as the identifier in the API call

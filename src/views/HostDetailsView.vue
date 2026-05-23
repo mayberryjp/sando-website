@@ -91,6 +91,10 @@
                     <div class="text-subtitle-1 text-green">
                       IP Address: {{ localHostDetail.ip_address }}
                     </div>
+                    
+                    <div v-if="localHostDetail.ip6_address" class="text-subtitle-1 text-green">
+                      IPv6 Address: {{ localHostDetail.ip6_address }}
+                    </div>
 
                     <div class="text-subtitle-1 text-green">
                       MAC Address: {{ localHostDetail.mac_address?.toUpperCase() }}

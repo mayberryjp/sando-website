@@ -78,6 +78,29 @@
           persistent-hint
         />
       </v-col>
+      <v-col cols="12" md="6" lg="4">
+        <v-select
+          v-model="network.ip_version"
+          label="IP Version"
+          variant="outlined"
+          density="comfortable"
+          :items="['IPv4', 'IPv6']"
+          :rules="[v => !!v || 'IP Version is required']"
+          hint="Select the IP version for this network"
+          persistent-hint
+        />
+      </v-col>
+      <v-col cols="12" md="6" lg="4">
+        <v-text-field
+          v-model="network.firewall_interface_name"
+          label="Firewall Interface Name (Optional)"
+          variant="outlined"
+          density="comfortable"
+          hint="e.g: WAN, LAN, OPT1"
+          persistent-hint
+          clearable
+        />
+      </v-col>
       <v-col cols="12" class="d-flex align-center">
         <v-btn icon="mdi-delete" color="error" @click="removeNetwork(idx)" />
       </v-col>
@@ -109,6 +132,8 @@ const localNetworks = ref<Array<{
   ntp_servers: string[];
   domain_name: string;
   ttl?: string;
+  ip_version: string;
+  firewall_interface_name: string;
 }>>([]);
 
 const fetchLocalNetworks = async () => {
@@ -144,6 +169,8 @@ const fetchLocalNetworks = async () => {
           ntp_servers: net.ntp_servers || [],
           domain_name: net.domain_name || "",
           ttl: net.ttl || "",
+          ip_version: net.ip_version || "",
+          firewall_interface_name: net.firewall_interface_name || "",
         }))
       : [];
   } catch (error) {
@@ -160,6 +187,8 @@ const addNetwork = () => {
     ntp_servers: [],
     domain_name: "",
     ttl: "",
+    ip_version: "",
+    firewall_interface_name: "",
   });
 };
 

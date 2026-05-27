@@ -19,7 +19,9 @@
           @focus="handleFocus(setting)"
           @blur="handleBlur(setting)"
           @keyup.enter="updateConfigurationValue(setting)"
-          :type="setting.type === 'Text/Int' ? 'number' : 'text'"
+          :type="getTextFieldType(setting)"
+          :append-inner-icon="getSensitiveSettingIcon(setting)"
+          @click:append-inner="toggleSensitiveSettingVisibility(setting)"
           :loading="props.updatingConfigs?.[setting.key]"
           :disabled="props.updatingConfigs?.[setting.key]"
           hide-details
@@ -33,6 +35,9 @@
           @focus="handleFocus(setting)"
           @blur="handleBlur(setting)"
           @keyup.enter="updateConfigurationValue(setting)"
+          :type="getTextFieldType(setting)"
+          :append-inner-icon="getSensitiveSettingIcon(setting)"
+          @click:append-inner="toggleSensitiveSettingVisibility(setting)"
           :loading="props.updatingConfigs?.[setting.key]"
           :disabled="props.updatingConfigs?.[setting.key]"
           hide-details
@@ -51,7 +56,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
+import { ref, watch } from "vue";
 import BaseConfigurationSection from "./BaseConfigurationSection.vue";
 import type { ConfigurationSetting } from "@/types/configurations";
 
@@ -69,6 +74,35 @@ const emit = defineEmits<{
 }>();
 
 const originalValues = ref<Record<string, any>>({});
+const visibleSensitiveSettings = ref<Record<string, boolean>>({});
+
+const sensitiveSettingKeys = new Set([
+  "TelegramBotToken",
+  "TelegramChatId",
+  "DiscordWebhookUrl",
+  "PiholeApiKey",
+  "AdGuardUsername",
+  "AdGuardPassword",
+  "MaxMindAPIKey",
+]);
+
+const isSensitiveSetting = (key: string) => sensitiveSettingKeys.has(key);
+
+watch(
+  () => props.settings,
+  (settings) => {
+    const visibilityState: Record<string, boolean> = {};
+
+    settings.forEach((setting) => {
+      if (isSensitiveSetting(setting.key)) {
+        visibilityState[setting.key] = false;
+      }
+    });
+
+    visibleSensitiveSettings.value = visibilityState;
+  },
+  { immediate: true }
+);
 
 const getBooleanValue = (value: any): boolean => {
   // Convert 1/0, "1"/"0", "true"/"false" to proper boolean
@@ -95,6 +129,34 @@ const handleBlur = (setting: ConfigurationSetting) => {
   if (originalValues.value[setting.key] !== setting.value) {
     updateConfigurationValue(setting);
   }
+};
+
+const isSensitiveSettingVisible = (setting: ConfigurationSetting) => {
+  return Boolean(visibleSensitiveSettings.value[setting.key]);
+};
+
+const getTextFieldType = (setting: ConfigurationSetting) => {
+  if (isSensitiveSetting(setting.key) && !isSensitiveSettingVisible(setting)) {
+    return "password";
+  }
+
+  return setting.type === "Text/Int" ? "number" : "text";
+};
+
+const getSensitiveSettingIcon = (setting: ConfigurationSetting) => {
+  if (!isSensitiveSetting(setting.key)) {
+    return undefined;
+  }
+
+  return isSensitiveSettingVisible(setting) ? "mdi-eye-off" : "mdi-eye";
+};
+
+const toggleSensitiveSettingVisibility = (setting: ConfigurationSetting) => {
+  if (!isSensitiveSetting(setting.key) || props.updatingConfigs?.[setting.key]) {
+    return;
+  }
+
+  visibleSensitiveSettings.value[setting.key] = !isSensitiveSettingVisible(setting);
 };
 
 const updateConfigurationValue = (setting: ConfigurationSetting) => {

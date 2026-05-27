@@ -668,7 +668,7 @@ const configurationDefinitions: ConfigurationDefinition[] = [
     key: "DiscordWebhookUrl",
     details: "Webhook URL for the Discord channel where notifications will be sent.",
     default: "",
-    suggested: "Obtain your own Discord webhook URL from your Discord server integrations.",
+    suggested: "Obtain your own Discord webhook URL from your Discord server integrations. Go to Channel settings and choose integrations and create a new webhook to get the URL.",
   },
   // Processes
   {

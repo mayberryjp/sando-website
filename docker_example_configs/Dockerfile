@@ -15,7 +15,6 @@ RUN echo "VITE_API_BASE_URL=SANDO_API_BASE_URL" >>/app/.env
 # Install dependencies and build the Vite project
 RUN npm install --silent && npx vite build
 
-
 # 2. Production stage
 FROM nginx:stable-alpine
 

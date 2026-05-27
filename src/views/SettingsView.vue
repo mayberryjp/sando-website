@@ -652,6 +652,24 @@ const configurationDefinitions: ConfigurationDefinition[] = [
     default: "",
     suggested: "Obtain your own Telegram chat ID from the Telegram app.",
   },
+  {
+    category: "Notifications",
+    displayName: "Discord Notifications",
+    type: "Boolean/Toggle",
+    key: "DiscordEnabled",
+    details: "Enable or disable Discord notifications for alerts and events.",
+    default: "Disabled",
+    suggested: "At user's discretion, based on their notification preferences.",
+  },
+  {
+    category: "Notifications",
+    displayName: "Discord Webhook URL",
+    type: "Text/String",
+    key: "DiscordWebhookUrl",
+    details: "Webhook URL for the Discord channel where notifications will be sent.",
+    default: "",
+    suggested: "Obtain your own Discord webhook URL from your Discord server integrations.",
+  },
   // Processes
   {
     category: "Processes",

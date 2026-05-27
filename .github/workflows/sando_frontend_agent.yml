@@ -1,0 +1,223 @@
+name: Sando Website Frontend Agent
+
+on:
+  issues:
+    types: [labeled]
+
+permissions:
+  contents: write
+  pull-requests: write
+  issues: write
+
+jobs:
+  sando-frontend-agent:
+    if: github.event.label.name == 'sando_frontend_agent_delegated'
+    runs-on: [sando_frontend_agent_delegated, self-hosted]
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Make Node 20 visible to sudo and runner user
+        run: |
+          sudo ln -sf /opt/hostedtoolcache/node/20.20.2/x64/bin/node /usr/local/bin/node
+          sudo ln -sf /opt/hostedtoolcache/node/20.20.2/x64/bin/npm /usr/local/bin/npm
+          sudo ln -sf /opt/hostedtoolcache/node/20.20.2/x64/bin/npx /usr/local/bin/npx
+          hash -r
+          sudo -u runner -- node -v
+
+      - name: Prepare clean Codex home
+        run: |
+          rm -rf "$RUNNER_TEMP/codex-home"
+          mkdir -p "$RUNNER_TEMP/codex-home"
+          chown -R runner:runner "$RUNNER_TEMP/codex-home"
+
+          rm -f /home/runner/.codex/config.toml || true
+          mkdir -p /home/runner/.codex
+          chown -R runner:runner /home/runner/.codex
+
+      - name: Build full issue context for Codex
+        env:
+          GH_TOKEN: ${{ github.token }}
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
+          REPO: ${{ github.repository }}
+        run: |
+          mkdir -p .agent
+
+          cat > .agent/issue.md <<'EOF'
+          You are working in the mayberryjp/sando-website repository.
+
+          Implement the requested frontend change from this GitHub issue.
+
+          Important:
+          - You must inspect the repository and make source code changes unless the feature is already implemented.
+          - Do not only summarize the issue.
+          - Do not stop after analysis.
+          - If no code change is needed, explain exactly which existing files already implement the behavior.
+          - Make the smallest reasonable code change.
+          - Prefer frontend/UI/client code changes.
+          - Do not edit unrelated files.
+          - Do not change secrets, credentials, workflow permissions, runner config, or Docker runner configuration.
+          - Do not edit files under .github/workflows unless the issue explicitly asks for workflow changes.
+          - Avoid backend/API/server changes unless the issue explicitly requires them.
+          - Preserve the existing styling and component patterns used by the project.
+          - Run relevant tests, linting, or build checks if available.
+          - Leave the repo in a commit-ready state.
+
+          Definition of done:
+          - The requested frontend change is implemented.
+          - Relevant validation passes, or you clearly document why validation could not be run.
+          - The change is ready for human review.
+
+          Full GitHub issue context follows.
+
+          EOF
+
+          gh issue view "$ISSUE_NUMBER" \
+            --repo "$REPO" \
+            --json number,title,body,author,comments,labels,url \
+            --jq '
+              "# GitHub Issue #" + (.number|tostring) + "\n\n" +
+              "URL: " + .url + "\n\n" +
+              "Title: " + .title + "\n\n" +
+              "Labels: " + ([.labels[].name] | join(", ")) + "\n\n" +
+              "Author: @" + .author.login + "\n\n" +
+
+              "## Original Issue Body\n\n" +
+              (.body // "") + "\n\n" +
+
+              "## Issue Comments / Conversation\n\n" +
+              (
+                if (.comments | length) == 0 then
+                  "_No comments yet._\n"
+                else
+                  (
+                    .comments
+                    | sort_by(.createdAt)
+                    | map(
+                        "### Comment by @" + .author.login + " at " + .createdAt + "\n\n" +
+                        (.body // "") + "\n"
+                      )
+                    | join("\n---\n\n")
+                  )
+                end
+              )
+            ' >> .agent/issue.md
+
+          echo "Built full issue context:"
+          sed -n '1,260p' .agent/issue.md
+
+      - name: Verify OpenAI API key secret
+        env:
+          OPENAI_API_KEY_CHECK: ${{ secrets.OPENAI_API_KEY }}
+        run: |
+          if [ -z "$OPENAI_API_KEY_CHECK" ]; then
+            echo "OPENAI_API_KEY is empty or unavailable"
+            exit 1
+          fi
+
+          echo "OPENAI_API_KEY is present"
+          echo "Length: ${#OPENAI_API_KEY_CHECK}"
+          echo "Prefix: $(printf '%s' "$OPENAI_API_KEY_CHECK" | cut -c1-7)"
+
+      - name: Run Codex coding agent
+        uses: openai/codex-action@v1
+        with:
+          openai-api-key: ${{ secrets.OPENAI_API_KEY }}
+          prompt-file: .agent/issue.md
+          output-file: .agent/codex-output.md
+          codex-home: ${{ runner.temp }}/codex-home
+          safety-strategy: unsafe
+          codex-user: runner
+          sandbox: danger-full-access
+
+      - name: Show Codex output
+        if: always()
+        run: |
+          echo "=== Codex output ==="
+          if [ -f .agent/codex-output.md ]; then
+            cat .agent/codex-output.md
+          else
+            echo "No .agent/codex-output.md found"
+          fi
+
+          echo
+          echo "=== Git status ==="
+          git status --short
+
+          echo
+          echo "=== Git diff summary ==="
+          git diff --stat || true
+
+      - name: Show changed files
+        run: |
+          echo "Changed files:"
+          git status --short
+          echo
+          git diff --name-only
+
+      - name: Block sensitive file changes
+        run: |
+          CHANGED="$(git diff --name-only)"
+
+          if echo "$CHANGED" | grep -E '(^\.env|\.pem$|\.key$|secrets|credentials)' ; then
+            echo "Refusing PR because sensitive files were changed."
+            exit 1
+          fi
+
+          if echo "$CHANGED" | grep -E '^\.github/workflows/' ; then
+            echo "Refusing PR because workflow files were changed."
+            exit 1
+          fi
+
+          if echo "$CHANGED" | grep -E '(^docker-compose\.ya?ml$|^compose\.ya?ml$)' ; then
+            echo "Refusing PR because Docker compose files were changed."
+            exit 1
+          fi
+
+      - name: Run frontend validation
+        run: |
+          set -e
+
+          if [ -f package-lock.json ]; then
+            echo "Detected package-lock.json"
+            npm ci
+          elif [ -f package.json ]; then
+            echo "Detected package.json"
+            npm install
+          else
+            echo "No package.json found; skipping Node validation"
+            exit 0
+          fi
+
+          npm run lint --if-present
+          npm test --if-present
+          npm run build --if-present
+
+      - name: Create branch and PR if changed
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -e
+
+          if git diff --quiet && git diff --cached --quiet; then
+            echo "No changes made by agent."
+            exit 0
+          fi
+
+          BRANCH="sando-frontend-agent/issue-${{ github.event.issue.number }}-${{ github.run_id }}"
+
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+          git checkout -b "$BRANCH"
+          git add .
+
+          git commit -m "Sando website frontend agent work for issue #${{ github.event.issue.number }}"
+          git push origin "$BRANCH"
+
+          gh pr create \
+            --title "Sando website frontend agent work for issue #${{ github.event.issue.number }}" \
+            --body-file .agent/codex-output.md \
+            --base main \
+            --head "$BRANCH"

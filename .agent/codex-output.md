@@ -1,13 +1,5 @@
-Implemented the Notifications Config change in [SettingsView.vue](/tmp/runner/work/sando-website/sando-website/src/views/SettingsView.vue:655).
+Implemented the config secret masking in [StandardConfigurationSection.vue](/tmp/runner/work/sando-website/sando-website/src/components/settings/configurations/StandardConfigurationSection.vue:16).
 
-Added:
-- `DiscordEnabled` as a `Boolean/Toggle`
-- `DiscordWebhookUrl` as a `Text/String`
+Sensitive fields now render as password inputs by default and get an independent `mdi-eye` / `mdi-eye-off` appended toggle. The underlying `setting.value`, blur handling, and Enter-save flow are unchanged. The sensitive key list covers the seven fields from the issue.
 
-These use the existing `NotificationsSection` and `StandardConfigurationSection`, so saving behavior follows the current `/configurations` update path for blur, Enter, and toggle changes.
-
-Validation:
-- Ran `npm ci`
-- Ran `npm run build` successfully
-
-Note: `npm ci` reported existing dependency audit findings, but I did not change dependencies for this issue. The only source change is `src/views/SettingsView.vue`; existing untracked `.agent/` was left untouched.
+Validation: `npm run build` passes. It reports the existing Vite large chunk warning, and `npm ci` reported existing npm audit findings; I did not change dependency versions. Also note `.agent/issue.md` was already modified and I left it untouched.

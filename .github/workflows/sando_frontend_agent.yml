@@ -176,7 +176,7 @@ jobs:
               echo "## Agent Change Summary"
               echo
               echo "### Agent"
-              echo "- Backend"
+              echo "- Frontend"
               echo
               echo "### GitHub issue"
               echo "- #${{ github.event.issue.number }}"

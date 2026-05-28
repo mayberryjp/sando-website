@@ -1,5 +1,11 @@
-Implemented the config secret masking in [StandardConfigurationSection.vue](/tmp/runner/work/sando-website/sando-website/src/components/settings/configurations/StandardConfigurationSection.vue:16).
+Implemented issue #4.
 
-Sensitive fields now render as password inputs by default and get an independent `mdi-eye` / `mdi-eye-off` appended toggle. The underlying `setting.value`, blur handling, and Enter-save flow are unchanged. The sensitive key list covers the seven fields from the issue.
+Changed `docker_example_configs/Dockerfile` to use `node:24-alpine` for the build-stage base image. Added the required summary at `.agent/change-summaries/issue-4-frontend.md`.
 
-Validation: `npm run build` passes. It reports the existing Vite large chunk warning, and `npm ci` reported existing npm audit findings; I did not change dependency versions. Also note `.agent/issue.md` was already modified and I left it untouched.
+Validation:
+- `npm ci` passed.
+- `npm run build` passed.
+- `git diff --check` passed.
+- Docker build could not run because the Docker daemon is not reachable at `/var/run/docker.sock`.
+
+Note: `.agent/issue.md` was already modified before my work and I left it untouched.

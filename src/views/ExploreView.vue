@@ -193,9 +193,9 @@ const handleItemsPerPageChange = (newItemsPerPage: number) => {
 // Load initial data on mount
 onMounted(loadData);
 
-// Reset to page 0 when search query changes
-watch(searchQuery, () => {
-  if (searchQuery.value === "") {
+// Reset to page 0 when search query is cleared
+watch(searchQuery, (newVal, oldVal) => {
+  if (newVal === "" && oldVal !== "") {
     isSearchMode.value = false;
     currentPage.value = 0;
     loadData();

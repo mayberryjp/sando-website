@@ -117,6 +117,8 @@ const headers = computed(() => [
   { title: "Times Seen", key: "sum_times_seen", sortable: false },
 ]);
 
+const currentPage = ref(1);
+
 const handleOptionsUpdate = ({
   page,
   itemsPerPage: newItemsPerPage,
@@ -124,11 +126,17 @@ const handleOptionsUpdate = ({
   page: number;
   itemsPerPage: number;
 }) => {
+  let changed = false;
   if (newItemsPerPage !== itemsPerPage.value) {
     itemsPerPage.value = newItemsPerPage;
     emit("changeItemsPerPage", newItemsPerPage);
+    changed = true;
   }
-  emit("changePage", page - 1); // v-data-table-server uses 1-based pages, convert to 0-based
+  if (page !== currentPage.value) {
+    currentPage.value = page;
+    emit("changePage", page - 1); // v-data-table-server uses 1-based pages, convert to 0-based
+    changed = true;
+  }
 };
 
 // Get color based on times seen

@@ -18,7 +18,7 @@ Important:
 - Leave the repo in a commit-ready state.
 
 Required final artifact:
-- Before finishing, create or update .agent/change-summaries/issue-4-frontend.md.
+- Before finishing, create or update .agent/change-summaries/issue-10-frontend.md.
 - This file will be consumed by a later documentation/release agent.
 - The file is required even if no code changes were made.
 - Base it only on verified repository changes. Do not invent behavior.
@@ -55,21 +55,48 @@ Definition of done:
 
 Full GitHub issue context follows.
 
-# GitHub Issue #4
+# GitHub Issue #10
 
-URL: https://github.com/mayberryjp/sando-website/issues/4
+URL: https://github.com/mayberryjp/sando-website/issues/10
 
-Title: Bump up base image version
+Title: Last codex run failed with error below
 
-Labels: sando_frontend_agent_ready
+Labels: sando_frontend_agent_delegated
 
 Author: @mayberryjp
 
 ## Original Issue Body
 
-In the Dockerfile
+Error: src/components/explore/ExploreTable.vue(129,7): error TS6133: 'changed' is declared but its value is never read.
+
+
+There was a problem with the last codex change
 
 ## Issue Comments / Conversation
 
-_No comments yet._
+### Comment by @mayberryjp at 2026-05-31T14:24:00Z
+
+## Codex implementation notes
+
+Issue #10 is a build failure, not a product behavior request. The reported TypeScript error is in `src/components/explore/ExploreTable.vue` at `handleOptionsUpdate` around line 129: `changed` is declared and assigned but never read.
+
+Clarified expected behavior:
+- Keep the existing `v-data-table-server` `@update:options="handleOptionsUpdate"` flow intact.
+- Preserve the existing emits: `changeItemsPerPage` when the table page size changes, and `changePage` with `page - 1` when the Vuetify 1-based page changes.
+- Do not add new UI behavior unless another issue asks for it.
+
+Likely implementation:
+- In `src/components/explore/ExploreTable.vue`, remove `let changed = false;` and both `changed = true;` assignments.
+- Leave the two independent `if` blocks in place so an options update that changes both page size and page can still emit both events.
+
+Acceptance criteria:
+- `npm run build` passes, including `vue-tsc -b`.
+- Existing table pagination and items-per-page behavior remain unchanged.
+
+Test suggestions:
+- Run `npm run build` to confirm TS6133 is resolved.
+- If doing manual verification, open the Explore table and verify changing items per page still emits/loads the new page size, and changing pages still requests the expected zero-based page index.
+
+Uncertainty:
+- I am inferring from the current code that `changed` was leftover bookkeeping from a prior implementation; it has no current consumer and can be removed without changing behavior.
 

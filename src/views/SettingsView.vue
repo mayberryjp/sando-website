@@ -275,7 +275,7 @@ const configurationDefinitions: ConfigurationDefinition[] = [
     category: "Detections",
     displayName: "Detect Offline Hosts",
     type: "INT",
-    key: "OfflineHostsDetection",
+    key: "OfflineHostDetection",
     details: "Detects hosts that are offline or no longer responding on the network.",
     default: "Enabled",
     suggested: "Enabled",

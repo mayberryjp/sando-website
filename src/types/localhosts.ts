@@ -15,6 +15,7 @@ export interface Localhost {
   tags: string| null;
   acknowledged: number;
   alerts_enabled: number;
+  offline_notifications_enabled: number;
   threat_score: number;
   management_link: string;
   last_dhcp_discover: string;

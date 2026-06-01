@@ -126,9 +126,11 @@
               :ip-address="ip_address"
               class="mb-4"
               :alerts_enabled="localHostDetail?.alerts_enabled"
+              :offline_notifications_enabled="localHostDetail?.offline_notifications_enabled"
               :whitelisted="localHostDetail?.whitelisted"
               @edit="enterEditMode"
               @toggleAlert="fetchLocalhostDetail(ip_address)"
+              @toggleOfflineNotifications="fetchLocalhostDetail(ip_address)"
             />
           </v-card-text>
           <v-card-text v-else>

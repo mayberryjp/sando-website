@@ -12,6 +12,20 @@
         {{ alertsEnabled ? "Notifications Enabled" : "Notifications Disabled" }}
       </v-btn>
       <v-btn
+        :color="offlineNotificationsEnabled ? 'success' : 'error'"
+        @click="toggleOfflineNotifications"
+        :loading="isTogglingOfflineNotifications"
+        density="comfortable"
+        class="text-body-2"
+        style="margin-left: 8px;"
+      >
+        <v-icon
+          :icon="offlineNotificationsEnabled ? 'mdi-lan-connect' : 'mdi-lan-disconnect'"
+          class="mr-2"
+        ></v-icon>
+        {{ offlineNotificationsEnabled ? 'Offline Notifications Enabled' : 'Offline Notifications Disabled' }}
+      </v-btn>
+      <v-btn
         :color="detectionsEnabled ? 'success' : 'error'"
         @click="toggleDetections"
         :loading="isTogglingDetections"
@@ -84,7 +98,7 @@
 
 <script setup lang="ts">
 import { ref, computed, watch } from "vue";
-import { updateWhitelisted } from "@/services/hosts";
+import { updateOfflineNotificationsEnabled, updateWhitelisted } from "@/services/hosts";
 import { useRouter } from "vue-router";
 import { deleteHost } from "@/services/hosts";
 import { useHostsStore } from "@/stores/hosts";
@@ -102,6 +116,11 @@ const props = defineProps({
     required: false,
     default: 0,
   },
+  offline_notifications_enabled: {
+    type: Number,
+    required: false,
+    default: 1,
+  },
   whitelisted: {
     type: Number,
     required: false,
@@ -114,6 +133,12 @@ watch(() => props.whitelisted, (val: number) => {
 });
 const detectionsEnabled = computed(() => whitelistedLocal.value === 0);
 const isTogglingDetections = ref(false);
+const offlineNotificationsLocal = ref(props.offline_notifications_enabled);
+watch(() => props.offline_notifications_enabled, (val: number) => {
+  offlineNotificationsLocal.value = val;
+});
+const offlineNotificationsEnabled = computed(() => offlineNotificationsLocal.value === 1);
+const isTogglingOfflineNotifications = ref(false);
 
 const router = useRouter();
 const hostsStore = useHostsStore();
@@ -130,6 +155,7 @@ const emit = defineEmits<{
   edit: [];
   toggleAlert: [];
   toggleDetections: [];
+  toggleOfflineNotifications: [];
 }>();
 const toggleDetections = async () => {
   isTogglingDetections.value = true;
@@ -145,6 +171,25 @@ const toggleDetections = async () => {
     whitelistedLocal.value = detectionsEnabled.value ? 0 : 1; // revert
   } finally {
     isTogglingDetections.value = false;
+  }
+};
+
+const toggleOfflineNotifications = async () => {
+  const previousOfflineNotificationsValue = offlineNotificationsLocal.value;
+  const newOfflineNotificationsState = !offlineNotificationsEnabled.value;
+  isTogglingOfflineNotifications.value = true;
+
+  try {
+    offlineNotificationsLocal.value = newOfflineNotificationsState ? 1 : 0;
+    await updateOfflineNotificationsEnabled(props.ipAddress, newOfflineNotificationsState);
+    emit('toggleOfflineNotifications');
+    notificationStore.showSuccess(`Offline notifications ${newOfflineNotificationsState ? 'enabled' : 'disabled'} for ${props.ipAddress}`);
+  } catch (error) {
+    console.error("Error toggling offline notifications:", error);
+    notificationStore.showError("Failed to update offline notifications setting");
+    offlineNotificationsLocal.value = previousOfflineNotificationsValue;
+  } finally {
+    isTogglingOfflineNotifications.value = false;
   }
 };
 

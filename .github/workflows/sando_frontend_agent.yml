@@ -26,11 +26,14 @@ jobs:
           hash -r
           sudo -u runner -- node -v
 
-      - name: Prepare clean Codex home
+      - name: Prepare clean Codex home and temp agent folder
         run: |
           rm -rf "$RUNNER_TEMP/codex-home"
           mkdir -p "$RUNNER_TEMP/codex-home"
           chown -R runner:runner "$RUNNER_TEMP/codex-home"
+
+          rm -rf "$RUNNER_TEMP/agent"
+          mkdir -p "$RUNNER_TEMP/agent"
 
           rm -f /home/runner/.codex/config.toml || true
           mkdir -p /home/runner/.codex
@@ -42,9 +45,7 @@ jobs:
           ISSUE_NUMBER: ${{ github.event.issue.number }}
           REPO: ${{ github.repository }}
         run: |
-          mkdir -p .agent
-
-          cat > .agent/issue.md <<'EOF'
+          cat > "$RUNNER_TEMP/agent/issue.md" <<'EOF'
           You are working in the mayberryjp/sando-website repository.
 
           Implement the requested frontend change from this GitHub issue.
@@ -73,6 +74,12 @@ jobs:
 
           ## Agent Change Summary
 
+          ### Agent
+          - Frontend
+
+          ### GitHub issue
+          - #${{ github.event.issue.number }}
+
           ### What changed
           - ...
 
@@ -97,7 +104,7 @@ jobs:
           Definition of done:
           - The requested frontend change is implemented.
           - Relevant validation passes, or you clearly document why validation could not be run.
-          - .agent/change-summary.md exists and follows the required format.
+          - .agent/change-summaries/issue-${{ github.event.issue.number }}-frontend.md exists and follows the required format.
           - The change is ready for human review.
 
           Full GitHub issue context follows.
@@ -133,10 +140,10 @@ jobs:
                   )
                 end
               )
-            ' >> .agent/issue.md
+            ' >> "$RUNNER_TEMP/agent/issue.md"
 
           echo "Built full issue context:"
-          sed -n '1,260p' .agent/issue.md
+          sed -n '1,260p' "$RUNNER_TEMP/agent/issue.md"
 
       - name: Verify OpenAI API key secret
         env:
@@ -155,8 +162,8 @@ jobs:
         uses: openai/codex-action@v1
         with:
           openai-api-key: ${{ secrets.OPENAI_API_KEY }}
-          prompt-file: .agent/issue.md
-          output-file: .agent/codex-output.md
+          prompt-file: ${{ runner.temp }}/agent/issue.md
+          output-file: ${{ runner.temp }}/agent/codex-output.md
           codex-home: ${{ runner.temp }}/codex-home
           safety-strategy: unsafe
           codex-user: runner
@@ -211,10 +218,11 @@ jobs:
         if: always()
         run: |
           echo "=== Codex output ==="
-          if [ -f .agent/codex-output.md ]; then
-            cat .agent/codex-output.md
+
+          if [ -f "$RUNNER_TEMP/agent/codex-output.md" ]; then
+            cat "$RUNNER_TEMP/agent/codex-output.md"
           else
-            echo "No .agent/codex-output.md found"
+            echo "No Codex output found"
           fi
 
           echo
@@ -287,7 +295,17 @@ jobs:
           git config user.email "github-actions[bot]@users.noreply.github.com"
 
           git checkout -b "$BRANCH"
-          git add .
+
+          # Add repo changes, but explicitly exclude temporary/generated agent files.
+          git add -A \
+            ':!.agent/issue.md' \
+            ':!.agent/codex-output.md' \
+            ':!.agent/pr-body.md'
+
+          if git diff --cached --quiet; then
+            echo "Only ignored/generated files changed. No PR needed."
+            exit 0
+          fi
 
           git commit -m "Sando website frontend agent work for issue #${{ github.event.issue.number }}"
           git push origin "$BRANCH"
@@ -297,8 +315,9 @@ jobs:
           {
             echo "## Codex Output"
             echo
-            if [ -f .agent/codex-output.md ]; then
-              cat .agent/codex-output.md
+
+            if [ -f "$RUNNER_TEMP/agent/codex-output.md" ]; then
+              cat "$RUNNER_TEMP/agent/codex-output.md"
             else
               echo "No Codex output file was produced."
             fi
@@ -314,11 +333,10 @@ jobs:
             else
               echo "No agent change summary was produced."
             fi
-          } > .agent/pr-body.md
-
+          } > "$RUNNER_TEMP/agent/pr-body.md"
 
           gh pr create \
             --title "Sando website frontend agent work for issue #${{ github.event.issue.number }}" \
-            --body-file .agent/pr-body.md \
+            --body-file "$RUNNER_TEMP/agent/pr-body.md" \
             --base main \
             --head "$BRANCH"

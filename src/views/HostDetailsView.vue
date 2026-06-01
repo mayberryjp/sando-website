@@ -126,7 +126,7 @@
               :ip-address="ip_address"
               class="mb-4"
               :alerts_enabled="localHostDetail?.alerts_enabled"
-              :offline_notifications_enabled="localHostDetail?.offline_notifications_enabled"
+              :alert_if_offline="localHostDetail?.alert_if_offline"
               :whitelisted="localHostDetail?.whitelisted"
               @edit="enterEditMode"
               @toggleAlert="fetchLocalhostDetail(ip_address)"

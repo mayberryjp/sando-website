@@ -98,7 +98,7 @@
 
 <script setup lang="ts">
 import { ref, computed, watch } from "vue";
-import { updateOfflineNotificationsEnabled, updateWhitelisted } from "@/services/hosts";
+import { updateAlertIfOffline, updateWhitelisted } from "@/services/hosts";
 import { useRouter } from "vue-router";
 import { deleteHost } from "@/services/hosts";
 import { useHostsStore } from "@/stores/hosts";
@@ -116,7 +116,7 @@ const props = defineProps({
     required: false,
     default: 0,
   },
-  offline_notifications_enabled: {
+  alert_if_offline: {
     type: Number,
     required: false,
     default: 1,
@@ -133,8 +133,8 @@ watch(() => props.whitelisted, (val: number) => {
 });
 const detectionsEnabled = computed(() => whitelistedLocal.value === 0);
 const isTogglingDetections = ref(false);
-const offlineNotificationsLocal = ref(props.offline_notifications_enabled);
-watch(() => props.offline_notifications_enabled, (val: number) => {
+const offlineNotificationsLocal = ref(props.alert_if_offline);
+watch(() => props.alert_if_offline, (val: number) => {
   offlineNotificationsLocal.value = val;
 });
 const offlineNotificationsEnabled = computed(() => offlineNotificationsLocal.value === 1);
@@ -181,7 +181,7 @@ const toggleOfflineNotifications = async () => {
 
   try {
     offlineNotificationsLocal.value = newOfflineNotificationsState ? 1 : 0;
-    await updateOfflineNotificationsEnabled(props.ipAddress, newOfflineNotificationsState);
+    await updateAlertIfOffline(props.ipAddress, newOfflineNotificationsState);
     emit('toggleOfflineNotifications');
     notificationStore.showSuccess(`Offline notifications ${newOfflineNotificationsState ? 'enabled' : 'disabled'} for ${props.ipAddress}`);
   } catch (error) {

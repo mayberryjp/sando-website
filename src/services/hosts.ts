@@ -7,17 +7,17 @@ export const updateWhitelisted = async (ip_address: string, whitelisted: number)
     throw error;
   }
 };
-export const updateOfflineNotificationsEnabled = async (
+export const updateAlertIfOffline = async (
   ip_address: string,
-  offline_notifications_enabled: boolean
+  alert_if_offline: boolean
 ) => {
   try {
-    const response = await api.put(`localhosts/${ip_address}/offline-notifications-enabled`, {
-      offline_notifications_enabled,
+    const response = await api.put(`localhosts/${ip_address}/alert-if-offline`, {
+      alert_if_offline,
     });
     return response;
   } catch (error) {
-    console.error("Error updating offline notifications status:", error);
+    console.error("Error updating alert-if-offline status:", error);
     throw error;
   }
 };

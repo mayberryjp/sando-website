@@ -273,6 +273,15 @@ const configurationDefinitions: ConfigurationDefinition[] = [
   },
   {
     category: "Detections",
+    displayName: "Detect Offline Hosts",
+    type: "INT",
+    key: "OfflineHostsDetection",
+    details: "Detects hosts that are offline or no longer responding on the network.",
+    default: "Enabled",
+    suggested: "Enabled",
+  },
+  {
+    category: "Detections",
     displayName: "Local Flows Detection",
     type: "INT",
     key: "LocalFlowsDetection",

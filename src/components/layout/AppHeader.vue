@@ -9,9 +9,9 @@
         </router-link>
         <div style="display: flex; flex-direction: column; align-items: flex-start; justify-content: center; height: 48px;">
           <span class="product-name text-subtitle-1 text-lg-h5">Sando
-            <!-- "| Know Your Network" hidden on phones (xs), shown from sm up -->
-            <span class="product-bar d-none d-sm-inline">|</span>
-            <span class="know-your-network d-none d-sm-inline">Know Your Network</span>
+            <!-- Tagline shown only >= 1500px (see `.tagline`), else hidden -->
+            <span class="product-bar tagline">|</span>
+            <span class="know-your-network tagline">Know Your Network</span>
           </span>
 
         </div>
@@ -110,8 +110,7 @@ const ui = useUiStore();
   text-decoration: none;
 }
 
-/* Branding colours/weight only — size is responsive via Vuetify
-   (text-subtitle-1 on xs–md, text-lg-h5 = 24px on desktop) and inherited by the spans. */
+/* Branding colour/weight only — size comes from Vuetify text utilities */
 .know-your-network {
   color: #9E394F;
   font-weight: 700;
@@ -135,6 +134,19 @@ const ui = useUiStore();
   text-align: start;
   line-height: 1.4;
   letter-spacing: 0.05em !important;
+  white-space: nowrap; /* never wrap the branding onto a second line */
+}
+
+/* Tagline hidden by default; shown only >= 1500px where nav + branding both fit.
+   (Custom threshold — Vuetify's lg=1280 is too tight once the nav appears.) */
+.tagline {
+  display: none;
+}
+
+@media (min-width: 1500px) {
+  .tagline {
+    display: inline;
+  }
 }
 
 </style>

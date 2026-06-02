@@ -1,6 +1,6 @@
 <template>
   <div class="host-actions">
-    <v-btn-group variant="outlined" class="rounded-pill">
+    <v-btn-group variant="outlined" class="rounded-pill host-actions-group">
       <v-btn
         :color="alertsEnabled ? 'success' : 'error'"
         @click="toggleAlerts"
@@ -17,7 +17,6 @@
         :loading="isTogglingDetections"
         density="comfortable"
         class="text-body-2"
-        style="margin-left: 8px;"
       >
         <v-icon
           :icon="detectionsEnabled ? 'mdi-shield-check-outline' : 'mdi-shield-off-outline'"
@@ -194,6 +193,18 @@ const confirmDelete = async () => {
 .host-actions {
   display: flex;
   align-items: center;
+}
+
+/* Let the outlined button group wrap instead of overflowing on narrow screens */
+.host-actions-group {
+  height: auto !important;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.host-actions-group > .v-btn {
+  margin-left: 0 !important;
 }
 
 .icon-crossed {

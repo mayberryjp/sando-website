@@ -2,8 +2,8 @@
   <v-row class="ma-0 rounded-lg">
     <!-- Status Cards -->
     <v-col
-      cols="10"
-      sm="5"
+      cols="6"
+      sm="4"
       class="bg-transparent custom-fifth-col"
       v-for="(stat, index) in statusStats"
       :key="index"

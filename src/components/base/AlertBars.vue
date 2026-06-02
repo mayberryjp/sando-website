@@ -1,12 +1,12 @@
 <template>
-  <div class="alert-bars">
+  <div class="alert-bars" :style="{ minWidth: `min(${containerMinWidth}px, 100%)` }">
     <div
       v-for="(count, index) in alertIntervals"
       :key="index"
       class="alert-bar"
       :class="getAlertClass(count)"
       :style="{
-        width: `${width}px`,
+        maxWidth: `${width}px`,
         height: `${height}px`,
       }"
       :title="`${count} alerts`"
@@ -15,7 +15,9 @@
 </template>
 
 <script setup lang="ts">
-defineProps({
+import { computed } from "vue";
+
+const props = defineProps({
   alertIntervals: {
     type: Array as () => number[],
     default: () => [],
@@ -30,6 +32,12 @@ defineProps({
   },
 });
 
+// Reserve room for every bar at full width so they aren't squeezed thin (e.g. in
+// the sidebar). Each bar = width + 2px gap + 2px margins.
+const containerMinWidth = computed(
+  () => props.alertIntervals.length * (props.width + 4)
+);
+
 const getAlertClass = (alertCount: number): string => {
   if (alertCount === 0) return "alert-none";
   if (alertCount <= 1) return "alert-low";
@@ -43,12 +51,16 @@ const getAlertClass = (alertCount: number): string => {
 .alert-bars {
   display: flex;
   gap: 2px;
+  max-width: 100%;
+  /* min-width (set inline) reserves room so bars aren't squeezed thin */
 }
 
 .alert-bar {
+  /* Share container width equally so all bars show (no scroll), capped at width */
+  flex: 1 1 0;
+  min-width: 0;
   margin: 1px;
   border-radius: 50rem;
-  display: inline-block;
   box-sizing: border-box;
   transition: transform 0.2s ease;
 }

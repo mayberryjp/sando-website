@@ -20,6 +20,8 @@
       <div class="detection-setting-row">
 
         <div class="detection-setting-cell">
+          <!-- Inline label, shown only in mobile stacked layout -->
+          <span class="detection-mobile-label">Alert</span>
           <v-checkbox
             v-model="setting.alert"
             @change="handleAlertChange(setting)"
@@ -30,6 +32,7 @@
           ></v-checkbox>
         </div>
         <div class="detection-setting-cell">
+          <span class="detection-mobile-label">Notify</span>
           <v-checkbox
             v-model="setting.notify"
             @change="handleNotifyChange(setting)"
@@ -40,6 +43,7 @@
           ></v-checkbox>
         </div>
         <div class="detection-setting-cell">
+          <span class="detection-mobile-label">ReNotify</span>
           <v-checkbox
             v-model="setting.reNotify"
             @change="handleReNotifyChange(setting)"
@@ -160,4 +164,11 @@ const updateDetectionValue = (setting: ConfigurationSetting) => {
   font-size: 12px;
   color: #999;
 }
+
+/* Inline checkbox labels are only used in the stacked layout on phones & tablets
+   (shown by the global settings-form.css rules below the lg breakpoint). */
+.detection-mobile-label {
+  display: none;
+}
+/* Mobile stacking for detection rows lives in src/assets/settings-form.css. */
 </style>

@@ -41,12 +41,12 @@
     <v-main>
       <v-container fluid>
         <v-row>
-          <!-- Only show HostList if not on explore route -->
-          <v-col cols="12" lg="3" class="host-list-panel" v-if="$route.name !== 'explore'">
+          <!-- HostList sidebar — hidden on full-width routes (explore, documentation) -->
+          <v-col cols="12" lg="3" class="host-list-panel" v-if="!fullWidthRoute">
             <HostList />
           </v-col>
           <!-- Full width on mobile/tablet; narrows to 9 cols beside the sidebar on lg+ -->
-          <v-col cols="12" :lg="$route.name === 'explore' ? 12 : 9">
+          <v-col cols="12" :lg="fullWidthRoute ? 12 : 9">
             <router-view></router-view>
           </v-col>
         </v-row>
@@ -56,12 +56,20 @@
 </template>
 
 <script setup lang="ts">
+import { computed } from "vue";
+import { useRoute } from "vue-router";
 import AppHeader from "@/components/layout/AppHeader.vue";
 import HostList from "@/components/dashboard/HostList.vue";
 import { navItems, githubLink } from "@/constants/navigation";
 import { useUiStore } from "@/stores/ui";
 
 const ui = useUiStore();
+const route = useRoute();
+
+// Routes that use the full content width with no HostList sidebar.
+const fullWidthRoute = computed(() =>
+  ["explore", "documentation", "settings"].includes(route.name as string)
+);
 </script>
 
 <style scoped>

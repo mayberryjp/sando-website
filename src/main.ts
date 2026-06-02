@@ -5,6 +5,7 @@ import App from "@/App.vue";
 import vuetify from "@/plugins/vuetify-plugin";
 // Imported after the Vuetify plugin so its table overrides win the cascade.
 import "@/assets/app-table.css";
+import "@/assets/settings-form.css";
 import { createPinia } from "pinia";
 import VueApexCharts from "vue3-apexcharts";
 

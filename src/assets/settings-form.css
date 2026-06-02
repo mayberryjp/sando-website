@@ -1,0 +1,120 @@
+/* =============================================================================
+   Phone & tablet layout for the Settings configuration form tables (< lg).
+
+   The settings sections render each setting as a <v-table> row (name cell +
+   control/meta cell). On phones and tablets that table overflows, so below the
+   lg breakpoint we stack every row as a full-width block:
+
+       Setting name
+       control(s)        (toggle / text field, or the Alert/Notify/ReNotify row)
+       details / default / suggested
+
+   These rules are GLOBAL (not scoped) on purpose: the row markup is split across
+   BaseConfigurationSection (the name cell + table) and the section components
+   that fill the `setting-row` slot (DetectionsSection, StandardConfigurationSection).
+   A scoped `:deep()` from one component does not reliably reach the other's
+   slotted cells, so the stacking lives here and is opted into with the
+   `settings-form-table` class on the <v-table>.
+   ============================================================================ */
+
+@media (max-width: 1279px) {
+  /* Stack the table: every table part becomes a full-width block.
+     `height: auto` is critical — Vuetify gives table cells a fixed
+     `height: var(--v-table-row-height)` (e.g. 36px in compact density), which
+     otherwise clips the stacked content so it overflows into the next row. */
+  .settings-form-table table,
+  .settings-form-table thead,
+  .settings-form-table tbody,
+  .settings-form-table tr,
+  .settings-form-table td,
+  .settings-form-table th {
+    display: block;
+    width: 100% !important;
+    max-width: 100% !important;
+    height: auto !important;
+    min-height: 0 !important;
+  }
+
+  /* The only header just labels "Setting" — each row names itself on mobile */
+  .settings-form-table thead {
+    display: none;
+  }
+
+  /* One bordered block per setting */
+  .settings-form-table tbody tr {
+    padding: 12px 4px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  }
+
+  .settings-form-table td {
+    padding: 0 !important;
+    vertical-align: top;
+  }
+
+  /* Name cell sits on its own line above the control, full width */
+  .settings-form-table .setting-name-cell,
+  .settings-form-table .setting-name-cell .font-weight-medium,
+  .settings-form-table .font-weight-medium {
+    width: 100% !important;
+    min-width: 0 !important;
+    padding-top: 0 !important;
+    margin-bottom: 10px;
+  }
+
+  /* --- Standard (toggle / text-field) rows --- */
+  .settings-form-table .setting-row-flex {
+    gap: 8px;
+    padding-left: 4px;
+  }
+  .settings-form-table .setting-row-flex .ml-4 {
+    margin-left: 0 !important;
+  }
+  .settings-form-table .setting-row-flex .v-switch {
+    margin-left: 6px;
+  }
+  .settings-form-table .setting-details,
+  .settings-form-table .setting-default,
+  .settings-form-table .setting-suggested {
+    margin-left: 0 !important;
+  }
+
+  /* --- Detections (Alert / Notify / ReNotify) rows ---
+     Keep the three options in a single horizontal row, each as a small column
+     of: header label on top, checkbox below. Layout per setting becomes:
+         Label
+         [Alert] [Notify] [ReNotify]
+         details / default / suggested  */
+  .settings-form-table .detection-setting-row {
+    flex-direction: row;
+    align-items: flex-start;
+    justify-content: flex-start;
+    gap: 8px;
+    margin-bottom: 10px;
+  }
+  .settings-form-table .detection-setting-cell {
+    flex: 0 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 0;
+    border-bottom: none;
+    min-width: 64px;
+  }
+  /* Per-checkbox header (Alert / Notify / ReNotify) shown above each box */
+  .settings-form-table .detection-mobile-label {
+    display: block;
+    font-weight: 600;
+    font-size: 13px;
+    color: #e0e6ed;
+    margin-bottom: 2px;
+  }
+  .settings-form-table .detection-setting-cell .v-checkbox {
+    flex: none;
+  }
+
+  /* Meta text below the controls */
+  .settings-form-table .setting-meta {
+    border-top: none !important;
+    margin-top: 4px;
+  }
+}

@@ -1,9 +1,15 @@
 <template>
-  <v-sheet class="settings-container" color="#0d1117">
+  <v-sheet class="settings-container pa-3 pa-sm-6" color="#0d1117">
     <v-row no-gutters>
-      <!-- Left side tabs -->
-      <v-col cols="12" sm="3">
-        <v-tabs v-model="activeTab" direction="vertical" color="primary">
+      <!-- Left side tabs — vertical on desktop (lg+), horizontal scrollable on
+           phones & tablets (< lg) so the rail doesn't squeeze the form. -->
+      <v-col cols="12" lg="3">
+        <v-tabs
+          v-model="activeTab"
+          :direction="lgAndUp ? 'vertical' : 'horizontal'"
+          :show-arrows="!lgAndUp"
+          color="primary"
+        >
           <!-- Configuration tabs -->
           <v-tab value="home-network">Home Network</v-tab>
           <v-tab value="other-networks">Other Networks</v-tab>
@@ -23,7 +29,7 @@
       </v-col>
 
       <!-- Right side content -->
-      <v-col cols="12" sm="9">
+      <v-col cols="12" lg="9">
         <v-card-text>
           <v-window v-model="activeTab">
             <!-- Configuration Tabs -->
@@ -229,6 +235,7 @@
 
 <script setup lang="ts">
 import { ref, computed, onMounted } from "vue";
+import { useDisplay } from "vuetify";
 import AdvancedSettings from "@/components/settings/AdvancedSettings.vue";
 import DetectionsSection from "@/components/settings/configurations/DetectionsSection.vue";
 import DetectionFineTuningSection from "@/components/settings/configurations/DetectionFineTuningSection.vue";
@@ -248,6 +255,10 @@ import type {
   ConfigurationApiItem,
 } from "@/types/configurations";
 import { useNotificationStore } from "@/stores/notification";
+
+// Tabs render vertically on desktop (lg+) and as a horizontal scrollable bar on
+// phones & tablets (< lg), where the narrow rail would otherwise squeeze the form.
+const { lgAndUp } = useDisplay();
 
 const activeTab = ref("home-network");
 
@@ -1140,5 +1151,19 @@ onMounted(() => {
 <style scoped>
 .settings-container {
   height: 100%;
+}
+
+/* The outer container now provides the page inset (pa-3 pa-sm-6), so keep the
+   inner content padding minimal to avoid doubling it up. */
+.settings-container :deep(.v-card-text) {
+  padding: 8px 0 0;
+}
+
+/* On desktop the content sits beside the vertical tab rail; give it a little
+   left gutter to separate from the tabs. */
+@media (min-width: 1280px) {
+  .settings-container :deep(.v-card-text) {
+    padding: 0 0 0 16px;
+  }
 }
 </style>

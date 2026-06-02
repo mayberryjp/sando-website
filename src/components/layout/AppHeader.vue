@@ -1,22 +1,18 @@
 <template>
   <v-app-bar color="background-100" dark app elevation="1">
 
-      <!-- Product Logo and Name (Left Justified) -->
-    <div class="product-branding d-flex align-center ms-2 ms-lg-8">
-      <div style="display: flex; flex-direction: row; align-items: center;">
-        <router-link to="/" class="router-link" style="display: flex; align-items: center; height: 48px; margin-right: 12px;">
-          <img src="/logo.png" alt="Product Logo" width="32px" height="32px" style="margin: 0; align-self: center;" />
-        </router-link>
-        <div style="display: flex; flex-direction: column; align-items: flex-start; justify-content: center; height: 48px;">
-          <span class="product-name text-subtitle-1 text-lg-h5">Sando
-            <!-- Tagline shown only >= 1500px (see `.tagline`), else hidden -->
-            <span class="product-bar tagline">|</span>
-            <span class="know-your-network tagline">Know Your Network</span>
-          </span>
-
-        </div>
-      </div>
-    </div>
+    <!-- Product logo + name (left); the whole block links to the dashboard -->
+    <router-link
+      :to="{ name: 'dashboard' }"
+      class="product-branding d-flex align-center text-decoration-none ms-2 ms-lg-8"
+    >
+      <img src="/logo.png" alt="Product Logo" width="32" height="32" class="mr-3" />
+      <span class="product-name text-subtitle-1 text-lg-h5">Sando
+        <!-- Tagline shown only >= 1500px (see `.tagline`), else hidden -->
+        <span class="product-bar tagline">|</span>
+        <span class="know-your-network tagline">Know Your Network</span>
+      </span>
+    </router-link>
 
     <v-spacer></v-spacer>
 
@@ -94,6 +90,7 @@ const ui = useUiStore();
 
 .product-branding {
   margin-top: 5px;
+  height: 48px;
 }
 
 .mx-2 {
@@ -102,12 +99,6 @@ const ui = useUiStore();
   font-size: 16px !important;
   font-weight: 400;
   letter-spacing: 0em !important;
-}
-
-.router-link {
-  display: flex;
-  align-items: center;
-  text-decoration: none;
 }
 
 /* Branding colour/weight only — size comes from Vuetify text utilities */

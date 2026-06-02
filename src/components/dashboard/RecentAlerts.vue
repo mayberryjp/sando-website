@@ -1,5 +1,5 @@
 <template>
-  <v-sheet rounded="lg" height="100%" color="#090c10">
+  <v-sheet rounded="lg" color="#090c10">
     <v-card-title class="d-flex align-center px-4 py-3">
       <span class="text-h6 text-sm-h5 text-md-h4 alerts-title">{{ title }}</span>
       <v-spacer></v-spacer>

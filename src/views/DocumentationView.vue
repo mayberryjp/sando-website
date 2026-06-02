@@ -1,5 +1,5 @@
 <template>
-  <v-container class="pa-3 pa-sm-6">
+  <div>
     <v-card class="mb-6" color="#181c22" variant="tonal">
       <v-card-text class="pa-0">
         <div v-if="config">
@@ -497,7 +497,7 @@
         </v-expansion-panel-text>
       </v-expansion-panel>
     </v-expansion-panels>
-  </v-container>
+  </div>
 </template>
 
 <script setup lang="ts">

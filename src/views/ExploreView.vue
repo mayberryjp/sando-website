@@ -1,66 +1,55 @@
 <template>
-  <v-container fluid class="pa-4">
-    <v-row>
-
-
-      <v-col cols="12">
-        <v-sheet
-          rounded="lg"
-          color="#090c10"
-          class="pa-4"
-          style="display: flex; align-items: flex-start; gap: 16px; max-width: 100%;"
-        >
-          <v-text-field
-            v-model="searchQuery"
-            density="compact"
-            variant="outlined"
-            label="Search flows..."
-            prepend-inner-icon="mdi-magnify"
-            @input="handleSearchInput"
-            hide-details
-            style="max-width: 400px;"
-          >
-            <template v-slot:append>
-              <v-progress-circular
-                v-if="isDebouncing"
-                indeterminate
-                size="20"
-                width="2"
-                color="primary"
-              ></v-progress-circular>
-            </template>
-          </v-text-field>
-          <!-- Make the alert fill the rest of the row -->
-          <v-alert
-            type="info"
-            variant="tonal"
-            density="compact"
-            border="start"
+  <div>
+    <!-- Search + tips: stacked on mobile/tablet, side by side on desktop -->
+    <v-sheet
+      rounded="lg"
+      color="#090c10"
+      class="pa-0 mb-4 d-flex flex-column flex-md-row align-stretch align-md-start ga-3 ga-md-4"
+    >
+      <v-text-field
+        v-model="searchQuery"
+        density="compact"
+        variant="outlined"
+        label="Search flows..."
+        prepend-inner-icon="mdi-magnify"
+        @input="handleSearchInput"
+        hide-details
+        class="search-field"
+      >
+        <template v-slot:append>
+          <v-progress-circular
+            v-if="isDebouncing"
+            indeterminate
+            size="20"
+            width="2"
             color="primary"
-            class="pa-2"
-            style="flex: 1; margin-top: 0;"
-          >
-            <span>
-              <strong>Search tips:</strong> You can search by IP, port, Geolocation, ISP, Allowlist name, DNS name, and partial timestamp in YYYY-MM-DD HH:MM:SS format. Only single word simple text searches are supported. Example: <code>8.8.8.8</code>, <code>China</code>, <code>Amazon</code>, <code>example.com</code>, <code>2025-06-05 21:49:52</code>. The most specific host detail available is provided (e.g: domain name or ISP or country). 
-            </span>
-          </v-alert>
-        </v-sheet>
-      </v-col>
+          ></v-progress-circular>
+        </template>
+      </v-text-field>
+      <!-- Make the alert fill the rest of the row -->
+      <v-alert
+        type="info"
+        variant="tonal"
+        density="compact"
+        border="start"
+        color="primary"
+        class="pa-2 flex-grow-1 ma-0"
+      >
+        <span>
+          <strong>Search tips:</strong> You can search by IP, port, Geolocation, ISP, Allowlist name, DNS name, and partial timestamp in YYYY-MM-DD HH:MM:SS format. Only single word simple text searches are supported. Example: <code>8.8.8.8</code>, <code>China</code>, <code>Amazon</code>, <code>example.com</code>, <code>2025-06-05 21:49:52</code>. The most specific host detail available is provided (e.g: domain name or ISP or country).
+        </span>
+      </v-alert>
+    </v-sheet>
 
-      <!-- Remove extra margin between search and table -->
-      <v-col cols="12" class="mt-2">
-        <ExploreTable
-          :data="tableData"
-          :loading="loading"
-          :totalItems="totalItems"
-          @changePage="handlePageChange"
-          @changeItemsPerPage="handleItemsPerPageChange"
-          @refresh="refreshData"
-        />
-      </v-col>
-    </v-row>
-
-  </v-container>
+    <ExploreTable
+      :data="tableData"
+      :loading="loading"
+      :totalItems="totalItems"
+      @changePage="handlePageChange"
+      @changeItemsPerPage="handleItemsPerPageChange"
+      @refresh="refreshData"
+    />
+  </div>
 </template>
 
 <script lang="ts" setup>
@@ -202,3 +191,17 @@ watch(searchQuery, () => {
   }
 });
 </script>
+
+<style scoped>
+/* Full-width search field when stacked on mobile/tablet; capped beside the
+   tips alert on desktop (md+). */
+.search-field {
+  max-width: 100%;
+}
+
+@media (min-width: 960px) {
+  .search-field {
+    max-width: 400px;
+  }
+}
+</style>

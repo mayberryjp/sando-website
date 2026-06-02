@@ -39,7 +39,10 @@
 
     <!-- Main Content -->
     <v-main>
-      <v-container fluid>
+      <!-- Single source of page padding for all routed views, so every page has
+           a consistent inset. Individual views should NOT add their own pa-* on
+           the root element (it would double up with this). -->
+      <v-container fluid class="pa-3 pa-sm-4 pa-lg-6">
         <v-row>
           <!-- HostList sidebar — hidden on full-width routes (explore, documentation) -->
           <v-col cols="12" lg="3" class="host-list-panel" v-if="!fullWidthRoute">

@@ -1,5 +1,5 @@
 <template>
-  <v-sheet class="settings-container pa-3 pa-sm-6" color="#0d1117">
+  <v-sheet class="settings-container" color="#0d1117">
     <v-row no-gutters>
       <!-- Left side tabs — vertical on desktop (lg+), horizontal scrollable on
            phones & tablets (< lg) so the rail doesn't squeeze the form. -->
@@ -1153,17 +1153,17 @@ onMounted(() => {
   height: 100%;
 }
 
-/* The outer container now provides the page inset (pa-3 pa-sm-6), so keep the
-   inner content padding minimal to avoid doubling it up. */
+/* AppLayout provides the page inset, so keep the inner content padding minimal
+   to avoid doubling it up. */
 .settings-container :deep(.v-card-text) {
   padding: 8px 0 0;
 }
 
-/* On desktop the content sits beside the vertical tab rail; give it a little
-   left gutter to separate from the tabs. */
+/* On desktop the content sits beside the vertical tab rail; give it a top inset
+   so the section title isn't flush to the border, plus a left gutter from the tabs. */
 @media (min-width: 1280px) {
   .settings-container :deep(.v-card-text) {
-    padding: 0 0 0 16px;
+    padding: 16px 0 0 16px;
   }
 }
 </style>

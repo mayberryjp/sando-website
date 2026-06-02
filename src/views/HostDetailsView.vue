@@ -509,9 +509,7 @@ const handleTagsUpdated = (newTags: string | null) => {
   font-size: 32px !important;
   font-weight: 500;
   color: #b1b8c0 !important;
-  font-family: BlinkMacSystemFont, "segoe ui", Roboto, "helvetica neue", Arial,
-    "noto sans", sans-serif, "apple color emoji", "segoe ui emoji",
-    "segoe ui symbol", "noto color emoji";
+  font-family: var(--app-font-family);
 }
 
 .text-subtitle-1 {

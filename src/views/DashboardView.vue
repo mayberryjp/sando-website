@@ -3,7 +3,7 @@
     <v-row class="quickstats-background ma-0 rounded-lg">
       <!-- Status Cards -->
       <v-col
-        cols="12"
+        cols="6"
         sm="6"
         md="3"
         v-for="(stat, index) in statusStats"
@@ -12,11 +12,13 @@
       >
         <v-card
           variant="plain"
-          class="text-center pa-4 bg-transparent border-none"
+          class="text-center pa-2 pa-sm-4 bg-transparent border-none"
         >
-          <div class="text-subtitle-1 mb-1">{{ stat.label }}</div>
+          <div class="text-subtitle-1 text-sm-h6 text-md-h5 font-weight-medium stat-label mb-1">
+            {{ stat.label }}
+          </div>
           <div class="stat-description mb-1">{{ stat.description || "" }}</div>
-          <div :class="['text-h5 text-sm-h4 text-md-h3', stat.color]">
+          <div :class="['text-h6 text-sm-h5 text-md-h4 font-weight-bold', stat.color]">
             {{ stat.value }}
           </div>
         </v-card>
@@ -168,49 +170,24 @@ onUnmounted(() => {
   height: 100%;
 }
 
-.text-red {
-  color: #dc3545 !important;
-  font-size: 30px;
-  font-weight: 700;
-  display: block;
-  font-family: BlinkMacSystemFont, segoe ui, Roboto, helvetica neue, Arial,
-    noto sans, sans-serif, apple color emoji, segoe ui emoji, segoe ui symbol,
-    noto color emoji;
+/* Custom stat value colours (size/weight come from Vuetify text utilities) */
+.text-red,
+.text-green-accent-3 {
+  font-family: var(--app-font-family);
 }
 
-.text-md-h3 {
-  font-size: 30px !important;
-  font-weight: 700;
-  display: block;
-  font-family: BlinkMacSystemFont, segoe ui, Roboto, helvetica neue, Arial,
-    noto sans, sans-serif, apple color emoji, segoe ui emoji, segoe ui symbol,
-    noto color emoji;
+.text-red {
+  color: #dc3545 !important;
 }
 
 .text-green-accent-3 {
   color: #5cdd8b !important;
-  font-size: 30px;
-  font-weight: 700;
-  display: block;
-  font-family: BlinkMacSystemFont, segoe ui, Roboto, helvetica neue, Arial,
-    noto sans, sans-serif, apple color emoji, segoe ui emoji, segoe ui symbol,
-    noto color emoji;
 }
 
-.text-subtitle-1 {
-  font-size: 1.75rem;
-  margin-top: 0;
-  margin-bottom: 0.5rem;
-  font-weight: 500;
-  line-height: 25px;
-  text-size-adjust: 100%;
-  font-size: 28px !important;
-  font-weight: 500;
-  display: block;
+/* Stat label colour & font (size/weight come from Vuetify text utilities) */
+.stat-label {
   color: rgb(177, 184, 192);
-  font-family: BlinkMacSystemFont, segoe ui, Roboto, helvetica neue, Arial,
-    noto sans, sans-serif, apple color emoji, segoe ui emoji, segoe ui symbol,
-    noto color emoji;
+  font-family: var(--app-font-family);
 }
 
 .quickstats-background {
@@ -224,7 +201,12 @@ onUnmounted(() => {
   color: #8b949e;
   font-weight: 400;
   line-height: 1.2;
-  font-family: BlinkMacSystemFont, segoe ui, Roboto, helvetica neue, Arial,
-    sans-serif;
+  font-family: var(--app-font-family);
+}
+
+@media (max-width: 599px) {
+  .stat-description {
+    font-size: 12px;
+  }
 }
 </style>

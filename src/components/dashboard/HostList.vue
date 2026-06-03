@@ -1,7 +1,7 @@
 <template>
   <v-sheet rounded="lg" height="100%" color="#0d1117" class="host-list custom-scrollbar">
-    <!-- Site Risk Header -->
-    <div class="site-risk-header pa-6">
+    <!-- Site Risk Header (compact on mobile via .is-mobile) -->
+    <div class="site-risk-header" :class="isMobile ? 'pa-3 is-mobile' : 'pa-6'">
       <div class="site-risk-header-content">
         <span class="site-risk-label">SITE RISK: </span>
 
@@ -10,61 +10,87 @@
         </span>
       </div>
     </div>
-    <!-- Search Filter -->
-    <div class="search-container pa-3">
-      <v-text-field
-        v-model="searchTerm"
-        density="compact"
-        variant="outlined"
-        placeholder="Search hosts..."
-        prepend-inner-icon="mdi-magnify"
-        hide-details
-        class="search-field"
-        clearable
-        @click:clear="searchTerm = ''"
-      ></v-text-field>
+
+    <!-- Selected host name (mobile only): tells the user which host is open -->
+    <div v-if="isMobile && selectedHostName" class="viewing-host px-3 pb-1">
+      Viewing: <span class="viewing-host-name">{{ selectedHostName }}</span>
     </div>
-    
-    <v-list>
-      <v-list-item
-        v-for="host in filteredHosts"
-        :key="host.ip_address"
-        class="host-list-item"
-        :class="{ 'selected-host': isHostSelected(host.ip_address) }"
-        @click="hostClickHandler(host)"
-      >
-        <div class="d-flex align-center w-100">
-          <!-- Icon Container with fixed width for alignment -->
-          <div class="icon-container">
-            <!-- SVG Icon with dynamic color matching threat score -->
-            <InlineSvg 
-              :name="host.icon || 'DEFAULT'" 
-              :color="getThreatScoreColor(host.threat_score)"
-              :size="24"
-            />
-          </div>
-          
-          <!-- Host Info with consistent left margin -->
-          <div class="host-info">
-            {{
-              host.local_description
-              || host.ip_address
-              || (host.mac_address ? host.mac_address.toUpperCase() : "")
-            }}
-          </div>
-          
-          <AlertBars :alert-intervals="getAlertIntervals(host.ip_address)" class="ml-auto mr-2" />
-          
-          <!-- Threat Score (moved after alert bar) -->
-          <div 
-            class="threat-score-text"
-            :style="{ color: getThreatScoreColor(host.threat_score) }"
-          >
-            {{ host.threat_score }}
-          </div>
+
+    <!-- Accordion toggle (mobile only): collapses the search + host list -->
+    <button
+      v-if="isMobile"
+      type="button"
+      class="host-list-toggle px-3 py-2"
+      :aria-expanded="listExpanded"
+      @click="toggleList"
+    >
+      <v-icon size="20" class="mr-1">
+        {{ listExpanded ? 'mdi-chevron-up' : 'mdi-chevron-down' }}
+      </v-icon>
+      <span class="host-list-toggle-label">
+        Hosts<template v-if="selectedHostName"> — {{ selectedHostName }}</template>
+      </span>
+    </button>
+
+    <v-expand-transition>
+      <div v-show="showList">
+        <!-- Search Filter -->
+        <div class="search-container pa-3">
+          <v-text-field
+            v-model="searchTerm"
+            density="compact"
+            variant="outlined"
+            placeholder="Search hosts..."
+            prepend-inner-icon="mdi-magnify"
+            hide-details
+            class="search-field"
+            clearable
+            @click:clear="searchTerm = ''"
+          ></v-text-field>
         </div>
-      </v-list-item>
-    </v-list>
+
+        <v-list>
+          <v-list-item
+            v-for="host in filteredHosts"
+            :key="host.ip_address"
+            class="host-list-item"
+            :class="{ 'selected-host': isHostSelected(host.ip_address) }"
+            @click="hostClickHandler(host)"
+          >
+            <div class="d-flex align-center w-100">
+              <!-- Icon Container with fixed width for alignment -->
+              <div class="icon-container">
+                <!-- SVG Icon with dynamic color matching threat score -->
+                <InlineSvg
+                  :name="host.icon || 'DEFAULT'"
+                  :color="getThreatScoreColor(host.threat_score)"
+                  :size="24"
+                />
+              </div>
+
+              <!-- Host Info with consistent left margin -->
+              <div class="host-info">
+                {{
+                  host.local_description
+                  || host.ip_address
+                  || (host.mac_address ? host.mac_address.toUpperCase() : "")
+                }}
+              </div>
+
+              <AlertBars :alert-intervals="getAlertIntervals(host.ip_address)" class="ml-auto mr-2" />
+
+              <!-- Threat Score (moved after alert bar) -->
+              <div
+                class="threat-score-text"
+                :style="{ color: getThreatScoreColor(host.threat_score) }"
+              >
+                {{ host.threat_score }}
+              </div>
+            </div>
+          </v-list-item>
+        </v-list>
+      </div>
+    </v-expand-transition>
 
     <!-- Dialog for no hosts found -->
     <v-dialog v-model="showNoHostsDialog" persistent width="400">
@@ -91,10 +117,15 @@ import InlineSvg from "@/components/base/InlineSvg.vue";  // Import new componen
 import type { Localhost } from "@/types/localhosts";
 import { computed, ref, onMounted } from 'vue';
 import { useRoute } from 'vue-router';
+import { useDisplay } from "vuetify";
 
 const router = useRouter();
 const hosts = useHostsStore();
 const route = useRoute();
+
+const { lgAndUp } = useDisplay();
+// Mobile/tablet = below the lg breakpoint, matching where AppLayout stacks the columns.
+const isMobile = computed(() => !lgAndUp.value);
 
 // Computed property to sort hosts by threat score (descending)
 const sortedHosts = computed(() => {
@@ -121,6 +152,9 @@ const hostClickHandler = (host: Localhost) => {
       name: "host",
       params: { ip_address: param },
     });
+    // Collapse the mobile accordion so the detail page is in view after selecting.
+    // No effect on desktop, where the list is always shown.
+    listExpanded.value = false;
   }
 };
 
@@ -174,6 +208,36 @@ const siteRiskLevel = computed(() => {
   if (score > 50 && score <= 75) return "HIGH";
   return "CRITICAL";
 });
+
+// The host currently open on the detail page. The route param can be an IP or a MAC,
+// because hostClickHandler pushes either as the `ip_address` param.
+const selectedHost = computed<Localhost | undefined>(() => {
+  const param = route.params.ip_address as string | undefined;
+  if (!param) return undefined;
+  return (
+    hosts.localhosts.find((h) => h.ip_address === param) ||
+    hosts.localhosts.find((h) => h.mac_address === param)
+  );
+});
+
+// Display name using the same fallback chain as the list rows.
+const selectedHostName = computed<string | null>(() => {
+  const h = selectedHost.value;
+  if (!h) return null;
+  return (
+    h.local_description ||
+    h.ip_address ||
+    (h.mac_address ? h.mac_address.toUpperCase() : null)
+  );
+});
+
+// Host list starts collapsed on mobile; on desktop the list is always shown.
+const listExpanded = ref(false);
+const toggleList = () => {
+  listExpanded.value = !listExpanded.value;
+};
+// Whether the search + list region should be visible right now.
+const showList = computed(() => !isMobile.value || listExpanded.value);
 
 const showNoHostsDialog = ref(false);
 
@@ -348,5 +412,55 @@ onMounted(async () => {
   text-transform: uppercase;
   letter-spacing: 1px;
   opacity: 0.85;
+}
+
+/* Compact Site Risk header on mobile (class applied via :class="...is-mobile") */
+.site-risk-header.is-mobile {
+  border-radius: 12px 12px 0 0;
+}
+
+.site-risk-header.is-mobile .site-risk-label,
+.site-risk-header.is-mobile .site-risk-desc {
+  font-size: 18px;
+}
+
+/* Selected-host line under the header (mobile only) */
+.viewing-host {
+  background: #161b22;
+  color: #8b949e;
+  font-size: 13px;
+  font-weight: 500;
+  text-align: center;
+}
+
+.viewing-host-name {
+  color: #b1b8c0;
+  font-weight: 700;
+}
+
+/* Accordion toggle button (mobile only) */
+.host-list-toggle {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  background: #161b22;
+  color: #b1b8c0;
+  border: none;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  font-size: 14px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+}
+
+.host-list-toggle:hover {
+  background: #1c232c;
+}
+
+.host-list-toggle-label {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
 </style>

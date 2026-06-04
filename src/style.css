@@ -24,6 +24,11 @@
   --color-orange: #f86b40;
   --color-rose: #f63c61;
   --color-burgundy: #a2344c;
+
+  /* Shared system font stack (reuse via var(--app-font-family)) */
+  --app-font-family: BlinkMacSystemFont, "segoe ui", Roboto, "helvetica neue",
+    Arial, "noto sans", sans-serif, "apple color emoji", "segoe ui emoji",
+    "segoe ui symbol", "noto color emoji";
 }
 
 body {

@@ -223,4 +223,5 @@ th.align-top,
 td.align-top {
   vertical-align: top !important;
 }
+/* Mobile stacking lives in src/assets/settings-form.css (global). */
 </style>

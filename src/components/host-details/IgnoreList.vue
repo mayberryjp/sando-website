@@ -1,7 +1,7 @@
 <template>
-  <v-sheet rounded="lg" height="100%" color="#090c10">
+  <v-sheet rounded="lg" color="#090c10">
     <v-card-title class="d-flex align-center px-4 py-3">
-      <span class="text-h6">{{ title }}</span>
+      <span class="text-subtitle-1 text-sm-h6 text-md-h5">{{ title }}</span>
       <v-spacer></v-spacer>
       <v-btn
         v-if="showRefreshButton"
@@ -18,7 +18,8 @@
       :headers="headers"
       :items="ignoreListItems"
       :items-per-page="itemsPerPage"
-      class="ignore-list-table"
+      mobile-breakpoint="md"
+      class="ignore-list-table app-table"
       density="compact"
     >
       <!-- Allow List ID Column -->
@@ -151,56 +152,37 @@ const deleteIgnoreListItem = async (item: IgnoreListItem) => {
 </script>
 
 <style scoped>
-:deep(.v-data-table) {
-  background-color: transparent !important;
-}
-
-/* Style for table header */
-:deep(.v-data-table .v-data-table-header) {
-  background-color: #0d1117 !important;
-}
-
-
-/* Change the entire table background */
-:deep(.v-table) {
-  background-color: #0d1117 !important;
-}
-
-/* Ensure the inner wrapper also has the background color */
-:deep(.v-table .v-table__wrapper) {
-  background-color: #0d1117 !important;
-}
-
+/* Table theme + mobile stacking come from the shared `app-table` class. */
 
 .ignore-list-table {
   color: #b1b8c0;
 }
 
-.text-h6 {
-  color: #b1b8c0;
-  font-size: 32px !important;
-}
-
 .date-column {
   color: #b1b8c0;
   font-weight: 500;
-  white-space: nowrap;
-  display: inline-block;
-  min-width: 90px; /* Ensures consistent width */
 }
 
-/* You can also add this to control the width of the date columns */
-:deep(.v-table th:nth-child(6)),
-:deep(.v-table th:nth-child(7)) {
-  min-width: 100px;
-  white-space: nowrap;
-}
+/* Desktop (>= md): keep dates/id on one line; below md cards wrap (app-table). */
+@media (min-width: 960px) {
+  .date-column {
+    white-space: nowrap;
+    display: inline-block;
+    min-width: 90px;
+  }
 
-.truncate-id {
-  max-width: 120px; /* Adjust this value if needed for ~20 characters */
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  display: inline-block;
+  :deep(.v-table th:nth-child(6)),
+  :deep(.v-table th:nth-child(7)) {
+    min-width: 100px;
+    white-space: nowrap;
+  }
+
+  .truncate-id {
+    max-width: 120px; /* ~20 characters */
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: inline-block;
+  }
 }
 </style>

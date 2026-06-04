@@ -8,9 +8,9 @@
           <v-card-text v-if="localHostDetail">
             <div class="d-flex flex-column flex-wrap">
               <!-- Host Title -->
-              <div class="d-flex align-center">
-                <!-- Device Icon - Now on the left -->
-                <div class="device-icon-container me-4 position-relative">
+              <div class="d-flex flex-column flex-sm-row align-start align-sm-center">
+                <!-- Device Icon - Now on the left (top on mobile) -->
+                <div class="device-icon-container me-sm-4 mb-3 mb-sm-0 position-relative">
                   <template v-if="localHostDetail?.management_link">
                     <a
                       :href="localHostDetail.management_link"
@@ -60,7 +60,7 @@
 
                 <!-- Host Info -->
                 <div class="host-title">
-                  <h2 class="text-h4 text-grey custom-heading">
+                  <h2 class="text-h5 text-sm-h4 text-grey custom-heading">
                     <template v-if="localHostDetail?.management_link">
                       <a
                         :href="localHostDetail.management_link"
@@ -161,20 +161,20 @@
               class="text-grey traffic-summary-full"
               >Lifetime Traffic Summary:
               <template v-if="localHostDetail">
-                <span class="traffic-summary-row">
-                  <span class="traffic-summary-item">
+                <span class="d-flex flex-wrap ga-2 ga-sm-4 mt-1 traffic-summary-row">
+                  <span class="d-flex align-center traffic-summary-item">
                     <v-icon size="18" color="orange" class="mr-1">mdi-arrow-up</v-icon>
                     Out Packets: {{ (localHostDetail.total_packets_src || 0).toLocaleString() }}
                   </span>
-                  <span class="traffic-summary-item">
+                  <span class="d-flex align-center traffic-summary-item">
                     <v-icon size="18" color="blue" class="mr-1">mdi-arrow-down</v-icon>
                     In Packets: {{ (localHostDetail.total_packets_dst || 0).toLocaleString() }}
                   </span>
-                  <span class="traffic-summary-item">
+                  <span class="d-flex align-center traffic-summary-item">
                     <v-icon size="18" color="orange" class="mr-1">mdi-arrow-up-bold</v-icon>
                     Out Bytes: {{ (localHostDetail.total_bytes_src || 0).toLocaleString() }} ({{ ((localHostDetail.total_bytes_src || 0) / 1073741824).toFixed(2) }} GB)
                   </span>
-                  <span class="traffic-summary-item">
+                  <span class="d-flex align-center traffic-summary-item">
                     <v-icon size="18" color="blue" class="mr-1">mdi-arrow-down-bold</v-icon>
                     In Bytes: {{ (localHostDetail.total_bytes_dst || 0).toLocaleString() }} ({{ ((localHostDetail.total_bytes_dst || 0) / 1073741824).toFixed(2) }} GB)
                   </span>
@@ -506,14 +506,13 @@ const handleTagsUpdated = (newTags: string | null) => {
   }
 }
 
+/* Size comes from Vuetify text utilities; this only styles appearance + wrap */
 .custom-heading {
   text-transform: uppercase !important;
-  font-size: 32px !important;
   font-weight: 500;
   color: #b1b8c0 !important;
-  font-family: BlinkMacSystemFont, "segoe ui", Roboto, "helvetica neue", Arial,
-    "noto sans", sans-serif, "apple color emoji", "segoe ui emoji",
-    "segoe ui symbol", "noto color emoji";
+  font-family: var(--app-font-family);
+  word-break: break-word;
 }
 
 .text-subtitle-1 {
@@ -521,6 +520,7 @@ const handleTagsUpdated = (newTags: string | null) => {
   font-size: 16px !important;
   font-weight: 700 !important;
   margin-top: 3px;
+  word-break: break-word; /* long IPv6/MAC values wrap instead of overflowing */
 }
 
 .device-icon-container {
@@ -591,29 +591,19 @@ const handleTagsUpdated = (newTags: string | null) => {
   margin: -8px;
 }
 
-/* Make traffic summary flex to full width */
+/* Full width + allow wrap (card subtitles default to nowrap, cutting text off) */
 .traffic-summary-full {
   width: 100%;
-  display: flex;
-  align-items: stretch;
-  flex: 1 1 100%;
-  width: 100%;
+  white-space: normal;
   margin-bottom: 1.5rem;
 }
 .traffic-summary-row {
-  align-items: stretch;
-  display: flex;
-  flex: 1 1 100%;
-  flex-wrap: wrap;
-  align-self: stretch;
   width: 100%;
-  gap: 1.5rem;
-  flex-grow: 1;
-  justify-content: space-between;
 }
+/* Each item can shrink and wrap rather than overflow */
 .traffic-summary-item {
-  display: flex;
-  align-items: center;
+  min-width: 0;
+  word-break: break-word;
 }
 
 .device-management-link:hover {

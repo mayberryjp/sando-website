@@ -1,12 +1,11 @@
 <template>
   <v-sheet
     rounded="lg"
-    height="100%"
     color="#0d1117 !important"
     class="explore-table-sheet"
   >
     <v-card-title class="d-flex align-center px-4 py-3">
-      <span class="text-h6">Network Flows</span>
+      <span class="text-subtitle-1 text-sm-h6 text-md-h5">Network Flows</span>
       <v-spacer></v-spacer>
       <v-btn
         icon="mdi-refresh"
@@ -25,7 +24,8 @@
       :items-length="totalItems || 0"
       :loading="loading"
       :no-data-text="'No flows found'"
-      class="explore-table"
+      mobile-breakpoint="md"
+      class="explore-table app-table"
       density="compact"
       @update:options="handleOptionsUpdate"
       :items-per-page-options="[itemsPerPage]"
@@ -165,21 +165,15 @@ const getDestinationDetails = (item: ExploreFlow) => {
 </script>
 
 <style scoped>
+/* No outer padding — the AppLayout container provides the page inset, and the
+   card title / table cells provide their own. Matches the dashboard alerts table
+   so both tables align consistently. */
 .explore-table-sheet {
-  /* Optional: add padding or shadow for more emphasis */
-  padding: 16px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
 }
 
 .explore-table {
   width: 100%;
-}
-
-/* Prevent line breaks in all table cells */
-:deep(.v-data-table__td) {
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
 }
 
 :deep(.v-data-table) {
@@ -194,12 +188,23 @@ const getDestinationDetails = (item: ExploreFlow) => {
   background-color: rgba(255, 255, 255, 0.05) !important;
 }
 
-.details-ellipsis {
-  display: inline-block;
-  max-width: 200px; /* ~50 characters in monospace, adjust as needed */
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  vertical-align: bottom;
+/* Desktop / landscape-tablet (>= md): keep cells on one line with ellipsis.
+   Below md the table renders as stacked cards (app-table), so these nowrap
+   rules are dropped to let card values wrap naturally. */
+@media (min-width: 960px) {
+  :deep(.v-data-table__td) {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .details-ellipsis {
+    display: inline-block;
+    max-width: 200px; /* ~50 characters in monospace, adjust as needed */
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    vertical-align: bottom;
+  }
 }
 </style>

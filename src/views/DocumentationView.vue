@@ -1,9 +1,9 @@
 <template>
-  <v-container class="pa-6">
+  <div>
     <v-card class="mb-6" color="#181c22" variant="tonal">
-      <v-card-text>
+      <v-card-text class="pa-0">
         <div v-if="config">
-          <div class="d-flex flex-wrap ga-4">
+          <div class="d-flex flex-wrap ga-2">
             <div class="configBubble"><strong>Site Name:</strong> {{ config.SiteName }}</div>
             <div class="configBubble"><strong>Version:</strong> {{ config.Version }}</div>
             <div class="configBubble"><strong>DB Schema:</strong> {{ config.DatabaseSchemaVersion }}</div>
@@ -18,10 +18,10 @@
       </v-card-text>
     </v-card>
 
-    <h1 class="text-h4 mb-4">Help & Documentation</h1>
+    <h1 class="text-h5 text-sm-h4 mb-4">Help & Documentation</h1>
     <v-divider class="mb-6"></v-divider>
 
-    <v-expansion-panels multiple>
+    <v-expansion-panels multiple class="faq-panels">
       <v-expansion-panel title="What is Sando?">
         <v-expansion-panel-text>
           <p>
@@ -476,7 +476,7 @@
         <v-expansion-panel-text>
           <p>Yes! There are configuration examples on Github in the third party integrations folder.
             These are the currently supported stats that are emitted via REST API at /api/quickstats:
-            <code>{"acknowledged_alerts": 0, "unacknowledged_alerts": 6453, "total_alerts": 6453, "unacknowledged_localhosts_count": 4, "acknowledged_localhosts_count": 44, "total_localhosts_count": 48, "ignorelist_count": 32, "average_threat_score": 32}</code>
+            <code class="code-block">{"acknowledged_alerts": 0, "unacknowledged_alerts": 6453, "total_alerts": 6453, "unacknowledged_localhosts_count": 4, "acknowledged_localhosts_count": 44, "total_localhosts_count": 48, "ignorelist_count": 32, "average_threat_score": 32}</code>
           </p>
         </v-expansion-panel-text>
       </v-expansion-panel>
@@ -497,7 +497,7 @@
         </v-expansion-panel-text>
       </v-expansion-panel>
     </v-expansion-panels>
-  </v-container>
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -529,11 +529,48 @@ onMounted(async () => {
   background: #1976d2;
   color: #fff;
   border-radius: 8px;
-  padding: 8px 16px;
-  margin: 4px 8px 4px 0;
+  padding: 6px 12px;
   font-size: 0.75rem;
   font-weight: 500;
-  display: inline-block;
   box-shadow: 0 2px 8px rgba(25, 118, 210, 0.08);
+  /* Each bubble is a flex item that can shrink (min-width:0) and wrap its own
+     content, so ANY long value wraps inside its bubble instead of overflowing. */
+  flex: 0 1 auto;
+  min-width: 0;
+  max-width: 100%;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+/* Match the FAQ accordion to the app's dark surface (Vuetify's default
+   `surface` is a grey #212121 that clashes with the theme). */
+.faq-panels :deep(.v-expansion-panel) {
+  background-color: #161b22;
+}
+
+.faq-panels :deep(.v-expansion-panel-title__overlay) {
+  background-color: transparent;
+}
+
+/* Indent lists inside the FAQ so bullets/text aren't flush against the edge */
+.faq-panels :deep(.v-expansion-panel-text ul) {
+  padding-left: 1.5rem;
+}
+
+.faq-panels :deep(.v-expansion-panel-text li) {
+  margin-bottom: 4px;
+}
+
+/* Long JSON example: wrap instead of forcing horizontal overflow on mobile */
+.code-block {
+  display: block;
+  margin-top: 8px;
+  padding: 8px 12px;
+  background: #11161d;
+  border-radius: 6px;
+  white-space: pre-wrap;
+  word-break: break-word;
+  overflow-wrap: anywhere;
+  font-size: 0.8rem;
 }
 </style>

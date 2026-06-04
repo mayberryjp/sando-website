@@ -1,7 +1,7 @@
 <template>
-  <v-sheet rounded="lg" height="100%" color="#090c10">
+  <v-sheet rounded="lg" color="#090c10">
     <v-card-title class="d-flex align-center px-4 py-3">
-      <span class="text-h6">{{ title }}</span>
+      <span class="text-h6 text-sm-h5 text-md-h4 alerts-title">{{ title }}</span>
       <v-spacer></v-spacer>
       <v-btn
         v-if="showRefreshButton"
@@ -18,7 +18,8 @@
       :headers="headers"
       :items="alerts"
       :items-per-page="itemsPerPage"
-      class="alerts-table"
+      mobile-breakpoint="md"
+      class="alerts-table app-table"
       density="compact"
       show-expand
     >
@@ -121,8 +122,8 @@
 
       <!-- Expanded Row for Flow Details -->
       <template v-slot:expanded-row="{ columns, item }">
-        <tr>
-          <td :colspan="columns.length" class="flow-details-row">
+        <tr class="expanded-row">
+          <td :colspan="columns.length">
             <div class="flow-details-container pa-4">
               <!-- <v-divider color="blue-lighten-4" class="mb-3"></v-divider> -->
 
@@ -494,8 +495,8 @@ const headers = [
     sortable: true,
     width: "180px",
   },
-  { title: "First Seen", key: "first_seen", sortable: true },
-  { title: "Last Seen", key: "last_seen", sortable: true },
+  { title: "First Seen", key: "first_seen", sortable: true, nowrap: true },
+  { title: "Last Seen", key: "last_seen", sortable: true, nowrap: true },
   {
     title: "Delete",
     key: "delete",
@@ -508,44 +509,16 @@ const headers = [
 </script>
 
 <style scoped>
-:deep(.v-data-table) {
-  background-color: transparent !important;
-}
+/* Generic table theme + responsiveness lives in src/assets/app-table.css
+   (applied via the `app-table` class). Only RecentAlerts-specific styling below. */
 
 .alerts-table {
   color: #b1b8c0;
 }
 
-.text-h6 {
+/* Alerts title colour (size comes from Vuetify text utilities) */
+.alerts-title {
   color: #b1b8c0;
-}
-
-:deep(.v-data-table) {
-  background-color: transparent !important;
-}
-
-/* Change the entire table background */
-:deep(.v-table) {
-  background-color: #0d1117 !important;
-}
-
-/* Ensure the inner wrapper also has the background color */
-:deep(.v-table .v-table__wrapper) {
-  background-color: #0d1117 !important;
-}
-
-/* Style for table header */
-:deep(.v-data-table .v-data-table-header) {
-  background-color: #0d1117 !important;
-}
-
-.alerts-table {
-  color: #b1b8c0;
-}
-
-.text-h6 {
-  color: #b1b8c0;
-  font-size: 32px !important;
 }
 
 .cursor-pointer {
@@ -602,15 +575,5 @@ const headers = [
 .date-column {
   color: #b1b8c0;
   font-weight: 500;
-  white-space: nowrap;
-  display: inline-block;
-  min-width: 90px; /* Ensures consistent width */
-}
-
-/* You can also add this to control the width of the date columns */
-:deep(.v-table th:nth-child(7)),
-:deep(.v-table th:nth-child(8)) {
-  min-width: 100px;
-  white-space: nowrap;
 }
 </style>

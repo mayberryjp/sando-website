@@ -10,7 +10,7 @@
         <h3>{{ category }}</h3>
       </v-expansion-panel-title>
       <v-expansion-panel-text>
-        <v-table>
+        <v-table class="settings-form-table">
           <thead>
             <tr>
               <th class="text-left" style="width: 40%">Setting</th>
@@ -32,7 +32,7 @@
     </v-expansion-panel>
 
     <!-- Just use the table directly when in standalone mode -->
-    <v-table v-else>
+    <v-table v-else class="settings-form-table">
       <thead>
         <tr>
           <th class="text-left" colspan="2">Setting</th>
@@ -102,4 +102,6 @@ h3 {
   width: 175px;
   padding-top: 11px;
 }
+/* Mobile stacking for these form tables lives in src/assets/settings-form.css
+   (global, applied via the `settings-form-table` class) — see note there. */
 </style>

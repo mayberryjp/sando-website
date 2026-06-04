@@ -1,27 +1,25 @@
 <template>
   <v-app-bar color="background-100" dark app elevation="1">
-  
-      <!-- Product Logo and Name (Left Justified) -->
-    <div class="product-branding d-flex align-center">
-      <div style="display: flex; flex-direction: row; align-items: center;">
-        <router-link to="/" class="router-link" style="display: flex; align-items: center; height: 48px; margin-right: 12px;">
-          <img src="/logo.png" alt="Product Logo" width="32px" height="32px" style="margin: 0; align-self: center;" />
-        </router-link>
-        <div style="display: flex; flex-direction: column; align-items: flex-start; justify-content: center; height: 48px;">
-          <span class="product-name text-h6">Sando
-            <span class="product-bar">|</span>
-            <span class="know-your-network">Know Your Network</span>
-          </span>
-          
-        </div>
-      </div>
-    </div>
+
+    <!-- Product logo + name (left); the whole block links to the dashboard -->
+    <router-link
+      :to="{ name: 'dashboard' }"
+      class="product-branding d-flex align-center text-decoration-none ms-2 ms-lg-8"
+    >
+      <img src="/logo.png" alt="Product Logo" width="32" height="32" class="mr-3" />
+      <span class="product-name text-subtitle-1 text-lg-h5">Sando
+        <!-- Tagline shown only >= 1500px (see `.tagline`), else hidden -->
+        <span class="product-bar tagline">|</span>
+        <span class="know-your-network tagline">Know Your Network</span>
+      </span>
+    </router-link>
 
     <v-spacer></v-spacer>
 
-    <div class="d-flex align-center">
+    <!-- Desktop navigation (full inline button row) -->
+    <div v-if="lgAndUp" class="d-flex align-center">
       <v-btn
-        v-for="(item, index) in menuItems"
+        v-for="(item, index) in navItems"
         :key="index"
         :to="{ name: item.routeName }"
         variant="text"
@@ -35,15 +33,15 @@
 
       <!-- GitHub Issues Link -->
       <v-btn
-        href="https://github.com/mayberryjp/sando/issues"
+        :href="githubLink.href"
         target="_blank"
         rel="noopener noreferrer"
         variant="text"
         class="mx-2"
         rounded
       >
-        <v-icon start>mdi-github</v-icon>
-        Requests & Roadmap
+        <v-icon start>{{ githubLink.icon }}</v-icon>
+        {{ githubLink.title }}
       </v-btn>
 
       <!-- Notification Bell Component -->
@@ -52,36 +50,36 @@
       <!-- Profile Dropdown Component -->
       <AppProfileMenu />
     </div>
+
+    <!-- Mobile / tablet navigation (bell + profile + hamburger) -->
+    <div v-else class="d-flex align-center">
+      <!-- Notification Bell Component -->
+      <AppNotifications />
+
+      <!-- Profile Dropdown Component -->
+      <AppProfileMenu />
+
+      <!-- Hamburger toggle (drawer is rendered in AppLayout) -->
+      <v-app-bar-nav-icon
+        aria-label="Open navigation menu"
+        @click="ui.toggleNavDrawer()"
+      ></v-app-bar-nav-icon>
+    </div>
   </v-app-bar>
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
+import { useDisplay } from "vuetify";
 import AppNotifications from '@/components/layout/AppNotifications.vue';
 import AppProfileMenu from '@/components/layout/AppProfileMenu.vue';
+import { navItems, githubLink } from "@/constants/navigation";
+import { useUiStore } from "@/stores/ui";
 
-const menuItems = ref([
-  {
-    title: "Dashboard",
-    icon: "mdi-view-dashboard",
-    routeName: "dashboard",
-  },
-  {
-    title: "Flow Explorer",
-    icon: "mdi-page-layout-header",
-    routeName: "explore",
-  },
-  {
-    title: "Documentation",
-    icon: "mdi-book-open-page-variant",
-    routeName: "documentation",
-  },
-  { title: "Settings",
-    icon: "mdi-cog-outline",
-    routeName: "settings",
-  },
-  
-]);
+// Collapse to a hamburger drawer below 1280px (lg breakpoint).
+const { lgAndUp } = useDisplay();
+
+// Drawer open state lives in the UI store; the drawer itself renders in AppLayout.
+const ui = useUiStore();
 </script>
 
 <style scoped>
@@ -90,16 +88,9 @@ const menuItems = ref([
   box-shadow: none !important;
 }
 
-
-
-.v-app-bar {
-  border-bottom: 0px !important;
-  box-shadow: none !important;
-}
-
 .product-branding {
-  margin-left: 35px;
   margin-top: 5px;
+  height: 48px;
 }
 
 .mx-2 {
@@ -110,44 +101,43 @@ const menuItems = ref([
   letter-spacing: 0em !important;
 }
 
-.router-link {
-  display: flex;
-  align-items: center;
-  text-decoration: none;
-}
-
+/* Branding colour/weight only — size comes from Vuetify text utilities */
 .know-your-network {
   color: #9E394F;
   font-weight: 700;
-  font-size: 1.5rem !important;
   text-align: start;
-  line-height: 36px;
-  font-size: 24px;
-  text-size-adjust: 100%;
+  line-height: 1.4;
   letter-spacing: 0.05em !important;
 }
 
 .product-bar {
   color: #9E394F;
   font-weight: 700;
-  font-size: 1.5rem !important;
   text-align: start;
-  line-height: 36px;
-  font-size: 24px;
+  line-height: 1.4;
   margin-right: 8px;
-  text-size-adjust: 100%;
   letter-spacing: 0.05em !important;
-
 }
+
 .product-name {
   color: #cf8e13;
   font-weight: 700;
-  font-size: 1.5rem !important;
   text-align: start;
-  line-height: 36px;
-  font-size: 24px;
-  text-size-adjust: 100%;
+  line-height: 1.4;
   letter-spacing: 0.05em !important;
+  white-space: nowrap; /* never wrap the branding onto a second line */
+}
+
+/* Tagline hidden by default; shown only >= 1500px where nav + branding both fit.
+   (Custom threshold — Vuetify's lg=1280 is too tight once the nav appears.) */
+.tagline {
+  display: none;
+}
+
+@media (min-width: 1500px) {
+  .tagline {
+    display: inline;
+  }
 }
 
 </style>

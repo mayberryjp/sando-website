@@ -30,6 +30,7 @@
           :alerts="recentAlerts"
           :loading="alertsLoading"
           :show-refresh-button="true"
+          :show-time-filter="true"
           @refresh="refreshAlerts"
         />
       </v-col>

@@ -1,7 +1,25 @@
 <template>
   <v-sheet rounded="lg" color="#090c10">
-    <v-card-title class="d-flex align-center px-4 py-3">
+    <v-card-title class="alerts-header d-flex align-center px-4 py-3">
       <span class="text-h6 text-sm-h5 text-md-h4 alerts-title">{{ title }}</span>
+      <v-btn-toggle
+        v-if="showTimeFilter"
+        v-model="selectedTimeFilter"
+        class="time-filter-toggle ml-0 ml-sm-4 mt-2 mt-sm-0"
+        density="compact"
+        divided
+        mandatory
+        selected-class="time-filter-toggle--selected"
+      >
+        <v-btn
+          v-for="option in timeFilterOptions"
+          :key="option.value"
+          :value="option.value"
+          size="small"
+        >
+          {{ option.label }}
+        </v-btn>
+      </v-btn-toggle>
       <v-spacer></v-spacer>
       <v-btn
         v-if="showRefreshButton"
@@ -16,7 +34,7 @@
 
     <v-data-table
       :headers="headers"
-      :items="alerts"
+      :items="filteredAlerts"
       :items-per-page="itemsPerPage"
       mobile-breakpoint="md"
       class="alerts-table app-table"
@@ -202,7 +220,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
+import { computed, ref } from "vue";
 import type { Alert } from "@/types/alerts";
 import {
   acknowledgeAlert as apiAcknowledgeAlert,
@@ -220,6 +238,7 @@ const props = defineProps<{
   title?: string;
   loading?: boolean;
   showRefreshButton?: boolean;
+  showTimeFilter?: boolean;
   itemsPerPage?: number;
 }>();
 
@@ -235,6 +254,48 @@ const loading = props.loading || false;
 const itemsPerPage = props.itemsPerPage || 50;
 const actionInProgress = ref(false);
 const processingItemId = ref<string | null>(null);
+type TimeFilterValue = "48h" | "7d" | "14d" | "all";
+
+const selectedTimeFilter = ref<TimeFilterValue>("48h");
+const timeFilterOptions: { label: string; value: TimeFilterValue }[] = [
+  { label: "48 Hours", value: "48h" },
+  { label: "7 Days", value: "7d" },
+  { label: "14 Days", value: "14d" },
+  { label: "All Time", value: "all" },
+];
+
+const timeFilterHours: Record<Exclude<TimeFilterValue, "all">, number> = {
+  "48h": 48,
+  "7d": 7 * 24,
+  "14d": 14 * 24,
+};
+
+const parseAlertTimestamp = (value: string): number => {
+  const timestamp = new Date(value).getTime();
+
+  if (!Number.isNaN(timestamp)) {
+    return timestamp;
+  }
+
+  return new Date(value.replace(" ", "T")).getTime();
+};
+
+const filteredAlerts = computed(() => {
+  if (!props.showTimeFilter || selectedTimeFilter.value === "all") {
+    return props.alerts;
+  }
+
+  const cutoff =
+    Date.now() - timeFilterHours[selectedTimeFilter.value] * 60 * 60 * 1000;
+
+  return props.alerts.filter((alert) => {
+    const firstSeenTimestamp = parseAlertTimestamp(alert.first_seen);
+
+    return (
+      !Number.isNaN(firstSeenTimestamp) && firstSeenTimestamp >= cutoff
+    );
+  });
+});
 
 // Get notification store
 const notificationStore = useNotificationStore();
@@ -516,9 +577,32 @@ const headers = [
   color: #b1b8c0;
 }
 
+.alerts-header {
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
 /* Alerts title colour (size comes from Vuetify text utilities) */
 .alerts-title {
   color: #b1b8c0;
+}
+
+.time-filter-toggle {
+  border: 1px solid #30363d;
+  border-radius: 6px;
+  flex-wrap: wrap;
+  height: auto;
+  overflow: hidden;
+}
+
+.time-filter-toggle :deep(.v-btn) {
+  color: #b1b8c0;
+  min-width: 76px;
+}
+
+.time-filter-toggle :deep(.time-filter-toggle--selected) {
+  background-color: #1f6feb;
+  color: #ffffff;
 }
 
 .cursor-pointer {

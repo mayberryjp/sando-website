@@ -19,3 +19,34 @@ export const githubLink = {
   icon: "mdi-github",
   href: "https://github.com/mayberryjp/sando/issues",
 };
+
+// Social links shown on Settings → Collaboration.
+export interface SocialLink {
+  title: string;
+  icon: string;
+  href: string;
+  color: string;
+}
+
+export const socialLinks: SocialLink[] = [
+  {
+    // /channel/<id>?sub_confirmation=1 opens the subscribe dialog (needs the
+    // channel-ID URL, not /@handle). ID is for @SandoSecurityAndDhcp.
+    title: "Subscribe on YouTube",
+    icon: "mdi-youtube",
+    href: "https://www.youtube.com/channel/UCSyhluScZC073sZgIXrqH9w?sub_confirmation=1",
+    color: "#ff0000",
+  },
+  {
+    title: "Join us on Reddit",
+    icon: "mdi-reddit",
+    href: "https://www.reddit.com/r/SandoSecurityAndDhcp/",
+    color: "#ff4500",
+  },
+  {
+    title: "Star us on GitHub",
+    icon: "mdi-github",
+    href: "https://github.com/mayberryjp/sando",
+    color: "#24292e",
+  },
+];

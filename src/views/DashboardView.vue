@@ -26,6 +26,15 @@
     </v-row>
     <v-row>
       <v-col cols="12">
+        <TrafficStats
+          :traffic-stats="trafficStats"
+          :loading="trafficStatsLoading"
+          :error="trafficStatsError"
+        />
+      </v-col>
+    </v-row>
+    <v-row>
+      <v-col cols="12">
         <RecentAlerts
           :alerts="recentAlerts"
           :loading="alertsLoading"
@@ -40,8 +49,13 @@
 
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted, computed } from "vue"; // Add onUnmounted
-import { getQuickStats } from "@/services/stats";
+import {
+  getQuickStats,
+  getTrafficStats,
+  type TrafficStat,
+} from "@/services/stats";
 import RecentAlerts from "@/components/dashboard/RecentAlerts.vue";
+import TrafficStats from "@/components/dashboard/TrafficStats.vue";
 import { useHostsStore } from "@/stores/hosts";
 import { useNotificationStore } from "@/stores/notification";
 
@@ -69,6 +83,9 @@ const quickStats = ref({
 const hosts = useHostsStore();
 const notificationStore = useNotificationStore();
 const alertsLoading = ref(false);
+const trafficStats = ref<TrafficStat[]>([]);
+const trafficStatsLoading = ref(true);
+const trafficStatsError = ref(false);
 
 // Status stats computed from quickStats
 const statusStats = computed(() => [
@@ -136,6 +153,21 @@ const fetchStats = async () => {
   }
 };
 
+const fetchTrafficStats = async () => {
+  trafficStatsLoading.value = true;
+  trafficStatsError.value = false;
+  try {
+    const { data } = await getTrafficStats();
+    trafficStats.value = data;
+  } catch (error) {
+    console.error("Error fetching traffic stats:", error);
+    trafficStats.value = [];
+    trafficStatsError.value = true;
+  } finally {
+    trafficStatsLoading.value = false;
+  }
+};
+
 // Store the interval ID to clear it later
 let statsRefreshInterval: number | null = null;
 
@@ -143,6 +175,7 @@ let statsRefreshInterval: number | null = null;
 onMounted(async () => {
   // Load initial data
   fetchStats();
+  fetchTrafficStats();
 
   // If alerts haven't been loaded yet, load them
   if (!hosts.alertsRecent.length) {
@@ -153,6 +186,7 @@ onMounted(async () => {
   statsRefreshInterval = window.setInterval(() => {
     console.log("Auto-refreshing dashboard stats...");
     fetchStats();
+    fetchTrafficStats();
   }, 60000);
 });
 

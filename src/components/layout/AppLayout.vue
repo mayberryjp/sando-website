@@ -15,10 +15,13 @@
         <v-list-item
           v-for="(item, index) in navItems"
           :key="index"
-          :to="{ name: item.routeName }"
+          :to="item.routeName ? { name: item.routeName } : undefined"
+          :href="item.href"
+          :target="item.href ? '_blank' : undefined"
+          :rel="item.href ? 'noopener noreferrer' : undefined"
           :prepend-icon="item.icon"
           :title="item.title"
-          :active="$route.name === item.routeName"
+          :active="item.routeName ? $route.name === item.routeName : false"
           color="rose"
           @click="ui.closeNavDrawer()"
         ></v-list-item>

@@ -21,11 +21,14 @@
       <v-btn
         v-for="(item, index) in navItems"
         :key="index"
-        :to="{ name: item.routeName }"
+        :to="item.routeName ? { name: item.routeName } : undefined"
+        :href="item.href"
+        :target="item.href ? '_blank' : undefined"
+        :rel="item.href ? 'noopener noreferrer' : undefined"
         variant="text"
         class="mx-2"
         rounded
-        :color="$route.name === item.routeName ? 'rose' : ''"
+        :color="item.routeName && $route.name === item.routeName ? 'rose' : ''"
       >
         <v-icon start>{{ item.icon }}</v-icon>
         {{ item.title }}

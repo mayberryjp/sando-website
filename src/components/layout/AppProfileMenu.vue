@@ -1,50 +1,7 @@
 <template>
-  <v-menu rounded :close-on-content-click="false">
-    <template v-slot:activator="{ props }">
-      <v-btn icon v-bind="props" class="ml-2">
-        <v-avatar color="burgundy" size="36">
-          <v-icon icon="mdi-account"></v-icon>
-        </v-avatar>
-      </v-btn>
-    </template>
-    <v-card :min-width="$vuetify.display.xs ? '90vw' : '200px'">
-      <v-list>
-        <v-list-item
-          v-for="(item, index) in profileMenuItems"
-          :key="index"
-          :to="item.routeName ? { name: item.routeName } : undefined"
-          link
-          @click="item.action ? item.action() : null"
-        >
-          <v-list-item-title>
-            <v-icon start>{{ item.icon }}</v-icon>
-            {{ item.title }}
-          </v-list-item-title>
-        </v-list-item>
-      </v-list>
-    </v-card>
-  </v-menu>
+  <v-btn icon class="ml-2" aria-label="Profile">
+    <v-avatar color="burgundy" size="36">
+      <v-icon icon="mdi-account"></v-icon>
+    </v-avatar>
+  </v-btn>
 </template>
-
-<script setup lang="ts">
-import { ref } from "vue";
-import { useRouter } from "vue-router";
-
-const router = useRouter();
-
-const profileMenuItems = ref([
-  {
-    title: "Settings",
-    icon: "mdi-cog",
-    routeName: "settings",
-  },
-  {
-    title: "Documentation",
-    icon: "mdi-help-circle",
-    action: () => {
-      // Add logout logic here
-      router.push({ name: "documentation" });
-    },
-  },
-]);
-</script>

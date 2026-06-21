@@ -3,13 +3,14 @@
 export interface NavItem {
   title: string;
   icon: string;
-  routeName: string;
+  routeName?: string;
+  href?: string;
 }
 
 export const navItems: NavItem[] = [
   { title: "Dashboard", icon: "mdi-view-dashboard", routeName: "dashboard" },
   { title: "Flow Explorer", icon: "mdi-page-layout-header", routeName: "explore" },
-  { title: "Documentation", icon: "mdi-book-open-page-variant", routeName: "documentation" },
+  { title: "Documentation", icon: "mdi-book-open-page-variant", href: "https://github.com/mayberryjp/sando" },
   { title: "Settings", icon: "mdi-cog-outline", routeName: "settings" },
 ];
 

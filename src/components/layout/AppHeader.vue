@@ -7,7 +7,7 @@
       class="product-branding d-flex align-center text-decoration-none ms-2 ms-lg-8"
     >
       <img src="/logo.png" alt="Product Logo" width="32" height="32" class="mr-3" />
-      <span class="product-name text-subtitle-1 text-lg-h5">Sando
+      <span class="product-name text-subtitle-1 text-lg-h5">Sando サンド
         <!-- Tagline shown only >= 1500px (see `.tagline`), else hidden -->
         <span class="product-bar tagline">|</span>
         <span class="know-your-network tagline">Know Your Network</span>

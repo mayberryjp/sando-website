@@ -34,7 +34,7 @@ jobs:
         uses: docker/build-push-action@v7
         with:
           context: .
-          file: ./Dockerfile
+          file: ./docker_example_configs/Dockerfile
           push: true
           no-cache: true
           tags: |

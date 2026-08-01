@@ -9,6 +9,7 @@ export interface NavItem {
 
 export const navItems: NavItem[] = [
   { title: "Dashboard", icon: "mdi-view-dashboard", routeName: "dashboard" },
+  { title: "Live Flows", icon: "mdi-lan-connect", routeName: "liveFlows" },
   { title: "Flow Explorer", icon: "mdi-page-layout-header", routeName: "explore" },
   { title: "Documentation", icon: "mdi-book-open-page-variant", href: "https://github.com/mayberryjp/sando" },
   { title: "Settings", icon: "mdi-cog-outline", routeName: "settings" },

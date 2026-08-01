@@ -2,6 +2,7 @@ import type { RouteRecordRaw } from "vue-router";
 import AppLayout from "@/components/layout/AppLayout.vue";
 import DashboardView from "@/views/DashboardView.vue";
 import ExploreView from "@/views/ExploreView.vue";
+import LiveFlowsView from "@/views/LiveFlowsView.vue";
 import SettingsView from "@/views/SettingsView.vue";
 import HostDetailsView from "@/views/HostDetailsView.vue";
 import DocumentationView from "@/views/DocumentationView.vue";
@@ -12,6 +13,7 @@ const privateRoutes: RouteRecordRaw[] = [
     component: AppLayout,
     children: [
       { path: "", name: "dashboard", component: DashboardView },
+      { path: "live-flows", name: "liveFlows", component: LiveFlowsView },
       { path: "explore", name: "explore", component: ExploreView },
       { path: "settings", name: "settings", component: SettingsView },
       { path: "host/:ip_address", name: "host", component: HostDetailsView },

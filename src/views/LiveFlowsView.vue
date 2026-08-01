@@ -89,20 +89,12 @@
           <span>{{ formatTimeOnly(item.last_seen || item.max_last_seen || "") }}</span>
         </template>
 
-        <template #item.total_src_packets="{ item }">
-          <span>{{ item.total_src_packets.toLocaleString() }}</span>
-        </template>
-
-        <template #item.total_src_bytes="{ item }">
-          <span class="nowrap-cell">{{ formatBytes(item.total_src_bytes) }}</span>
-        </template>
-
         <template #item.total_dst_packets="{ item }">
-          <span>{{ item.total_dst_packets.toLocaleString() }}</span>
+          {{ item.total_dst_packets.toLocaleString() }}
         </template>
 
         <template #item.total_dst_bytes="{ item }">
-          <span class="nowrap-cell">{{ formatBytes(item.total_dst_bytes) }}</span>
+          <span class="nowrap-value">{{ formatBytes(item.total_dst_bytes) }}</span>
         </template>
 
         <template #item.activity_events="{ item }">
@@ -172,10 +164,8 @@ const headers = [
   { title: "Destination Name", key: "dst_name", sortable: true },
   { title: "Dest Port", key: "dst_port", sortable: true },
   { title: "Protocol", key: "protocol", sortable: true },
-  { title: "Src Packets", key: "total_src_packets", sortable: true },
-  { title: "Src Bytes", key: "total_src_bytes", sortable: true },
-  { title: "Dst Packets", key: "total_dst_packets", sortable: true },
-  { title: "Dst Bytes", key: "total_dst_bytes", sortable: true },
+  { title: "Dest Packets", key: "total_dst_packets", sortable: true },
+  { title: "Dest Bytes", key: "total_dst_bytes", sortable: true },
   { title: "Times Seen", key: "activity_events", sortable: true },
 ];
 
@@ -489,7 +479,7 @@ onUnmounted(() => {
   vertical-align: bottom;
 }
 
-.nowrap-cell {
+.nowrap-value {
   white-space: nowrap;
 }
 

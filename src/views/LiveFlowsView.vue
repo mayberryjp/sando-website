@@ -89,12 +89,12 @@
           <span>{{ formatTimeOnly(item.last_seen || item.max_last_seen || "") }}</span>
         </template>
 
-        <template #item.total_dst_packets="{ item }">
-          {{ item.total_dst_packets.toLocaleString() }}
+        <template #item.total_packets="{ item }">
+          {{ item.total_packets.toLocaleString() }}
         </template>
 
-        <template #item.total_dst_bytes="{ item }">
-          <span class="nowrap-value">{{ formatBytes(item.total_dst_bytes) }}</span>
+        <template #item.total_bytes="{ item }">
+          <span class="nowrap-value">{{ formatBytes(item.total_bytes) }}</span>
         </template>
 
         <template #item.activity_events="{ item }">
@@ -164,8 +164,8 @@ const headers = [
   { title: "Destination Name", key: "dst_name", sortable: true },
   { title: "Dest Port", key: "dst_port", sortable: true },
   { title: "Protocol", key: "protocol", sortable: true },
-  { title: "Dest Packets", key: "total_dst_packets", sortable: true },
-  { title: "Dest Bytes", key: "total_dst_bytes", sortable: true },
+  { title: "Packets", key: "total_packets", sortable: true },
+  { title: "Bytes", key: "total_bytes", sortable: true },
   { title: "Times Seen", key: "activity_events", sortable: true },
 ];
 
@@ -181,8 +181,8 @@ const lastPollLabel = computed(() => {
 
 const sortedFlows = computed(() => {
   return [...aggregateMap.value.values()].sort((a, b) => {
-    if (b.total_dst_packets !== a.total_dst_packets) return b.total_dst_packets - a.total_dst_packets;
-    if (b.total_dst_bytes !== a.total_dst_bytes) return b.total_dst_bytes - a.total_dst_bytes;
+    if (b.total_packets !== a.total_packets) return b.total_packets - a.total_packets;
+    if (b.total_bytes !== a.total_bytes) return b.total_bytes - a.total_bytes;
     if (b.activity_events !== a.activity_events) return b.activity_events - a.activity_events;
     if (b.total_times_seen !== a.total_times_seen) return b.total_times_seen - a.total_times_seen;
     return b.most_recent_unix_ms - a.most_recent_unix_ms;

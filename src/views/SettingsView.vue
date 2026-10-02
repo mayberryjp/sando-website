@@ -849,15 +849,6 @@ const configurationDefinitions: ConfigurationDefinition[] = [
   // Discovery
   {
     category: "Discovery",
-    displayName: "NMAP OS Fingerprinting",
-    type: "Boolean/Toggle",
-    key: "DiscoveryNmapOsFingerprint",
-    details: "Enable or disable NMAP OS fingerprinting for local device discovery. This helps identify the operating system of devices on the network.",
-    default: "Disabled",
-    suggested: "Enabled",
-  },
-  {
-    category: "Discovery",
     displayName: "DNS Resolver Timeout",
     type: "Text/Int",
     key: "DnsResolverTimeout",

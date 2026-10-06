@@ -100,6 +100,10 @@
                       MAC Address: {{ localHostDetail.mac_address?.toUpperCase() }}
                     </div>
 
+                    <div v-if="localHostDetail.domain_name" class="text-subtitle-1 text-green">
+                      Domain Name: {{ localHostDetail.domain_name }}
+                    </div>
+
                     <!-- Host Tags -->
                     <div>
                       <HostTags

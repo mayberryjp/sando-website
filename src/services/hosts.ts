@@ -71,6 +71,7 @@ export const updateHost = async (
     icon: string;
     alerts_enabled: number;
     management_link: string;
+    domain_name: string;
   }>
 ) => {
   try {

@@ -25,5 +25,6 @@ export interface Localhost {
   total_bytes_src: number;
   total_bytes_dst: number;
   ip6_address: string;
+  domain_name: string;
   whitelisted: number;
 }

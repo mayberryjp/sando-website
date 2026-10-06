@@ -50,6 +50,19 @@
             clearable
           />         
 
+          <!-- Domain Name Field -->
+          <v-text-field
+            v-model="formData.domainName"
+            label="Domain Name"
+            variant="outlined"
+            density="comfortable"
+            class="mb-6"
+            prepend-inner-icon="mdi-web"
+            hint="Domain name of this device"
+            persistent-hint
+            clearable
+          />
+
           <!-- Device Category Dropdown -->
           <v-select
             v-model="formData.category"
@@ -238,6 +251,7 @@ const formData = ref({
   managementLink: "",
   macAddress: "",
   ip6Address: "",
+  domainName: "",
 });
 
 const originalData = ref({
@@ -247,6 +261,7 @@ const originalData = ref({
   managementLink: "",
   macAddress: "",
   ip6Address: "",
+  domainName: "",
 });
 
 const notificationStore = useNotificationStore();
@@ -259,7 +274,8 @@ const hasChanges = computed(() => {
     formData.value.friendlyName !== originalData.value.friendlyName ||
     formData.value.managementLink !== originalData.value.managementLink ||
     formData.value.macAddress !== originalData.value.macAddress ||
-    formData.value.ip6Address !== originalData.value.ip6Address
+    formData.value.ip6Address !== originalData.value.ip6Address ||
+    formData.value.domainName !== originalData.value.domainName
   );
 });
 
@@ -337,6 +353,7 @@ const initializeForm = () => {
     const category = props.hostDetail.icon || "";
     const macAddress = props.hostDetail.mac_address || "";
     const ip6Address = props.hostDetail.ip6_address || "";
+    const domainName = props.hostDetail.domain_name || "";
 
     formData.value = {
       ipAddress,
@@ -345,6 +362,7 @@ const initializeForm = () => {
       managementLink,
       macAddress,
       ip6Address,
+      domainName,
     };
 
     originalData.value = {
@@ -354,6 +372,7 @@ const initializeForm = () => {
       managementLink,
       macAddress,
       ip6Address,
+      domainName,
     };
   }
 };
@@ -371,6 +390,7 @@ const saveHost = async () => {
       icon: formData.value.category,
       mac_address: formData.value.macAddress,
       ip6_address: formData.value.ip6Address,
+      domain_name: formData.value.domainName,
     };
 
     // If IP address was changed, use MAC address as the identifier in the API call

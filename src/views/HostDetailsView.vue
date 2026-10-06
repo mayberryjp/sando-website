@@ -101,7 +101,7 @@
                     </div>
 
                     <div v-if="localHostDetail.domain_name" class="text-subtitle-1 text-green">
-                      Domain Name: {{ localHostDetail.domain_name }}
+                      Domain Name: {{ localHostDetail.domain_name?.toUpperCase() }}
                     </div>
 
                     <!-- Host Tags -->

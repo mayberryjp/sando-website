@@ -921,15 +921,6 @@ const configurationDefinitions: ConfigurationDefinition[] = [
   },
   {
     category: "Discovery",
-    displayName: "Miren Fetch Interval",
-    type: "Text/Int",
-    key: "MirenFetchInterval",
-    details: "Lookback window in seconds passed to Miren when fetching DNS query history. Determines how far back query history is retrieved on each fetch.",
-    default: "3600",
-    suggested: "3600 (1 hour)",
-  },
-  {
-    category: "Discovery",
     displayName: "Reverse DNS Lookup",
     type: "Boolean/Toggle",
     key: "DiscoveryReverseDns",

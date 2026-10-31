@@ -123,6 +123,18 @@ export const deleteIgnoreListItem = async (allowlistId: string) => {
   }
 };
 
+export const deleteStaleIgnoreListEntries = async () => {
+  try {
+    const response = await api.delete<{ message: string; deleted_count: number }>(
+      "ignorelist/stale"
+    );
+    return response;
+  } catch (error) {
+    console.error("Error deleting stale ignore list entries:", error);
+    throw error;
+  }
+};
+
 export const addLocalhostTag = async (ip_address: string, tag: string) => {
   try {
     const response = await api.put(`localhosttags/${ip_address}`, {

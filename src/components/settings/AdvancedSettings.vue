@@ -20,6 +20,20 @@
           </p>
         </div>
 
+        <div class="maintenance-action mb-6">
+          <v-btn
+            color="error"
+            variant="elevated"
+            min-width="260"
+            elevation="2"
+            prepend-icon="mdi-delete-clock"
+            @click="deleteStaleEntriesDialog = true"
+            :loading="isDeletingStaleEntries"
+          >
+            Delete Stale Host Allow Entries
+          </v-btn>
+        </div>
+
         <div class="maintenance-action">
           <v-btn
             color="primary"
@@ -76,6 +90,40 @@
       </v-card>
     </v-dialog>
     
+    <v-dialog
+      v-model="deleteStaleEntriesDialog"
+      max-width="500"
+      :persistent="isDeletingStaleEntries"
+    >
+      <v-card>
+        <v-card-title class="text-h5 text-wrap">Delete Stale Host Allow Entries</v-card-title>
+        <v-card-text>
+          Permanently delete allow-list entries across all hosts whose latest
+          matching flow was seen more than 30 days ago? Recent entries and entries
+          with unknown last seen are preserved. This action cannot be undone.
+        </v-card-text>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn
+            color="grey-darken-1"
+            variant="text"
+            :disabled="isDeletingStaleEntries"
+            @click="deleteStaleEntriesDialog = false"
+          >
+            Cancel
+          </v-btn>
+          <v-btn
+            color="error"
+            variant="text"
+            :loading="isDeletingStaleEntries"
+            @click="deleteStaleEntries"
+          >
+            Delete Stale Entries
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+
     <!-- Recalculate Threat Scores Confirmation Dialog -->
     <v-dialog v-model="recalculateScoresDialog" max-width="500">
       <v-card>
@@ -118,6 +166,7 @@
 import { ref, onMounted, computed } from "vue";
 import api from "@/services/api";
 import { deleteAllAlerts as deleteAllAlertsService, forceThreatCollection } from "@/services/alerts";
+import { deleteStaleIgnoreListEntries } from "@/services/hosts";
 import { useNotificationStore } from "@/stores/notification";
 
 // Get SANDO_API_URL from environment variables
@@ -128,7 +177,27 @@ const isDeleteAlertsLoading = ref(false);
 const isRecalculatingScores = ref(false);
 const deleteAlertsDialog = ref(false);
 const recalculateScoresDialog = ref(false);
+const deleteStaleEntriesDialog = ref(false);
+const isDeletingStaleEntries = ref(false);
 const notificationStore = useNotificationStore();
+
+const deleteStaleEntries = async () => {
+  if (isDeletingStaleEntries.value) return;
+
+  isDeletingStaleEntries.value = true;
+  try {
+    const { data } = await deleteStaleIgnoreListEntries();
+    notificationStore.showSuccess(
+      `Deleted ${data.deleted_count} stale host allow ${data.deleted_count === 1 ? "entry" : "entries"}.`
+    );
+    deleteStaleEntriesDialog.value = false;
+  } catch (error) {
+    console.error("Error deleting stale host allow entries:", error);
+    notificationStore.showError("Failed to delete stale host allow entries. Please try again.");
+  } finally {
+    isDeletingStaleEntries.value = false;
+  }
+};
 
 // Delete all alerts
 const confirmDeleteAllAlerts = () => {

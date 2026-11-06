@@ -22,7 +22,53 @@
             hint="IP address of this device"
             persistent-hint
             clearable
+            :disabled="selectingIp || saving"
           />
+
+          <div v-if="showNetworkSelection" class="mb-6">
+            <v-select
+              v-model="selectedNetwork"
+              :items="networkOptions"
+              item-title="title"
+              item-value="cidr"
+              label="Local Network"
+              variant="outlined"
+              density="comfortable"
+              prepend-inner-icon="mdi-lan"
+              :loading="networksLoading"
+              :disabled="networksLoading || selectingIp || saving"
+              :no-data-text="networksError ? 'Failed to load local networks' : 'No IPv4 local networks configured'"
+              hint="Select the network to find an unused IPv4 address"
+              persistent-hint
+              clearable
+              class="mb-2"
+            />
+            <v-btn
+              v-if="networksError"
+              type="button"
+              variant="text"
+              color="info"
+              class="mb-2 me-2"
+              @click="loadLocalNetworks"
+            >
+              Retry Loading Networks
+            </v-btn>
+            <v-btn
+              type="button"
+              variant="outlined"
+              size="small"
+              color="info"
+              prepend-icon="mdi-auto-fix"
+              :loading="selectingIp"
+              :disabled="!selectedNetwork || networksLoading || selectingIp || saving"
+              @click="selectUnusedIp"
+            >
+              AUTO-SELECT UNUSED IP
+            </v-btn>
+            <div class="mt-2 text-caption text-grey">
+              Inventory lookup only; does not reserve or probe the address. Save Changes to apply.
+            </div>
+          </div>
 
           <!-- IPv6 Address Field -->
           <v-text-field
@@ -196,7 +242,7 @@
                 color="primary"
                 type="submit"
                 :loading="saving"
-                :disabled="!hasChanges || saving"
+                :disabled="!hasChanges || saving || selectingIp"
               >
                 Save Changes
               </v-btn>
@@ -211,12 +257,15 @@
 
 <script setup lang="ts">
 import { ref, computed, onMounted, watch } from "vue";
+import { isAxiosError } from "axios";
 import type { Localhost } from "@/types/localhosts";
 import {
   updateHost,
   getDeviceCategories,
   autoClassifyDevice,
+  getAvailableIp,
 } from "@/services/hosts";
+import { getLocalNetworks } from "@/services/settings";
 import {
   isValidUrl,
   openUrlSafely,
@@ -243,6 +292,12 @@ const categoriesError = ref(false);
 const deviceCategories = ref<Array<{ name: string; value: string }>>([]);
 const classifying = ref(false);
 const classificationOptions = ref<Array<{ name: string; value: string }>>([]);
+const selectedNetwork = ref<string | null>(null);
+const networkOptions = ref<Array<{ title: string; cidr: string }>>([]);
+const networksLoading = ref(false);
+const networksLoaded = ref(false);
+const networksError = ref(false);
+const selectingIp = ref(false);
 
 const formData = ref({
   ipAddress: "",
@@ -265,6 +320,57 @@ const originalData = ref({
 });
 
 const notificationStore = useNotificationStore();
+const showNetworkSelection = computed(() =>
+  !!props.hostDetail && (!originalData.value.ipAddress || !formData.value.ipAddress)
+);
+
+const loadLocalNetworks = async () => {
+  networksLoading.value = true;
+  networksError.value = false;
+  try {
+    const networks = await getLocalNetworks();
+    networkOptions.value = networks
+      .filter(network =>
+        network.cidr && !network.cidr.includes(":") && network.ip_version !== "IPv6"
+      )
+      .map(network => ({
+        cidr: network.cidr,
+        title: network.firewall_interface_name
+          ? `${network.firewall_interface_name} (${network.cidr})`
+          : network.cidr,
+      }));
+    networksLoaded.value = true;
+  } catch (error) {
+    networksError.value = true;
+    notificationStore.showError("Failed to load local networks. Please retry.");
+  } finally {
+    networksLoading.value = false;
+  }
+};
+
+const selectUnusedIp = async () => {
+  if (!selectedNetwork.value || selectingIp.value || saving.value) return;
+  const network = selectedNetwork.value;
+  const currentForm = formData.value;
+  selectingIp.value = true;
+  try {
+    const { data } = await getAvailableIp(network);
+    if (formData.value === currentForm && selectedNetwork.value === network) {
+      formData.value.ipAddress = data.ip_address;
+    }
+  } catch (error) {
+    const status = isAxiosError(error) ? error.response?.status : undefined;
+    notificationStore.showError(
+      status === 404
+        ? "No unused IPv4 addresses are available in the selected network."
+        : status === 400
+          ? "The selected network is invalid. Check its IPv4 CIDR configuration."
+          : "Failed to find an unused IP address. Please try again."
+    );
+  } finally {
+    selectingIp.value = false;
+  }
+};
 
 // Computed
 const hasChanges = computed(() => {
@@ -346,6 +452,7 @@ const selectClassification = (option: { name: string; value: string }) => {
 };
 
 const initializeForm = () => {
+  selectedNetwork.value = null;
   if (props.hostDetail) {
     const ipAddress = props.hostDetail.ip_address || "";
     const friendlyName = props.hostDetail.local_description || "";
@@ -378,7 +485,7 @@ const initializeForm = () => {
 };
 
 const saveHost = async () => {
-  if (!props.hostDetail || !valid.value) return;
+  if (!props.hostDetail || !valid.value || selectingIp.value) return;
 
   saving.value = true;
 
@@ -420,6 +527,11 @@ const saveHost = async () => {
 
 // Watchers
 watch(() => props.hostDetail, initializeForm, { immediate: true });
+watch(showNetworkSelection, (show) => {
+  if (show && !networksLoaded.value && !networksLoading.value && !networksError.value) {
+    loadLocalNetworks();
+  }
+}, { immediate: true });
 
 // Lifecycle
 onMounted(() => {

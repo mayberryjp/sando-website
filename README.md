@@ -31,6 +31,18 @@ npm run build
 npm run preview
 ```
 
+## Selecting an unused host IP
+
+In Edit Host, hosts without an IPv4 address show a Local Network selector below
+the IP Address input (also available when the input is cleared). Choose a configured
+IPv4 network, labeled with its firewall interface name and CIDR, then click
+**AUTO-SELECT UNUSED IP** to populate the IP Address field.
+
+This calls `GET /api/localhosts/available-ip?network=<CIDR>`. The lookup excludes
+known hosts and configured routers, but does not reserve, probe, or save the address.
+Click **Save Changes** to apply it. Exhausted networks and lookup failures are
+shown as notifications. Configure networks in Local Networks Configuration.
+
 ## Technologies
 
 - Vue 3

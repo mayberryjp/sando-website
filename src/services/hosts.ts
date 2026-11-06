@@ -33,6 +33,21 @@ export const getLocalhosts = async () => {
   }
 };
 
+export const getAvailableIp = async (network: string) => {
+  try {
+    const response = await api.get<{ ip_address: string }>("localhosts/available-ip", {
+      params: { network },
+    });
+    if (typeof response.data?.ip_address !== "string" || !response.data.ip_address.trim()) {
+      throw new Error("Available IP lookup returned no IP address.");
+    }
+    return response;
+  } catch (error) {
+    console.error("Error fetching available IP address:", error);
+    throw error;
+  }
+};
+
 export const getLocalhostDetail = async (ip_address: string) => {
   try {
     const response = await api.get(`localhosts/${ip_address}`);

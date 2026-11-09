@@ -185,7 +185,7 @@
                       >Source Port:</span
                     >
                     <span class="text-white">{{
-                      parseFlow(item.flow).src_port || "N/A"
+                      parseFlow(item.flow).src_port ?? "N/A"
                     }}</span>
                   </div>
 
@@ -194,7 +194,7 @@
                       >Destination Port:</span
                     >
                     <span class="text-white">{{
-                      parseFlow(item.flow).dst_port || "N/A"
+                      parseFlow(item.flow).dst_port ?? "N/A"
                     }}</span>
                   </div>
 
@@ -308,7 +308,7 @@ const parseFlow = (
   dst_ip: string;
   src_port: string | number;
   dst_port: string | number;
-  protocol: string;
+  protocol: string | number;
 } => {
   try {
     // Format: [src_ip, dst_ip, src_port, dst_port, protocol, ...]
@@ -323,9 +323,9 @@ const parseFlow = (
     return {
       src_ip: flowArray[0] || "",
       dst_ip: flowArray[1] || "",
-      src_port: flowArray[2] || "",
-      dst_port: flowArray[3] || "",
-      protocol: flowArray[4] || "",
+      src_port: flowArray[2] ?? "",
+      dst_port: flowArray[3] ?? "",
+      protocol: flowArray[4] ?? "",
     };
   } catch (error) {
     console.error("Error parsing flow data:", error, flowString);
@@ -438,7 +438,7 @@ const whitelistExactFlow = async (alert: Alert) => {
     emit("refresh");
   } catch (error) {
     console.error("Error adding to whitelist:", error);
-    notificationStore.showError("Failed to add to allowlist");
+    notificationStore.showError(error instanceof Error ? error.message : "Failed to add to allowlist");
   } finally {
     actionInProgress.value = false;
   }
@@ -468,7 +468,7 @@ const whitelistSourceToPort = async (alert: Alert) => {
     emit("refresh");
   } catch (error) {
     console.error("Error adding to ignorelist:", error);
-    notificationStore.showError("Failed to add to allowlist");
+    notificationStore.showError(error instanceof Error ? error.message : "Failed to add to allowlist");
   } finally {
     actionInProgress.value = false;
   }
@@ -498,7 +498,7 @@ const whitelistSourceToDestination = async (alert: Alert) => {
     emit("refresh");
   } catch (error) {
     console.error("Error adding to whitelist:", error);
-    notificationStore.showError("Failed to add to allowlist");
+    notificationStore.showError(error instanceof Error ? error.message : "Failed to add to allowlist");
   } finally {
     actionInProgress.value = false;
   }
@@ -530,7 +530,7 @@ const whitelistAsLocalServerExposed = async (alert: Alert) => {
 
   } catch (error) {
     console.error("Error adding to allowlist:", error);
-    notificationStore.showError("Failed to add to allowlist");
+    notificationStore.showError(error instanceof Error ? error.message : "Failed to add to allowlist");
   } finally {
     actionInProgress.value = false;
   }

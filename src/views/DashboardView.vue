@@ -115,14 +115,12 @@ const statusStats = computed(() => [
   },
 ]);
 
-// Computed property to get recent alerts, sort and limit them
+// Sort all recent alerts; the table handles filtering and pagination locally.
 const recentAlerts = computed(() => {
-  return [...hosts.alertsRecent]
-    .sort(
-      (a, b) =>
-        new Date(b.last_seen).getTime() - new Date(a.last_seen).getTime()
-    )
-    .slice(0, 50);
+  return [...hosts.alertsRecent].sort(
+    (a, b) =>
+      new Date(b.last_seen).getTime() - new Date(a.last_seen).getTime()
+  );
 });
 
 // Function to refresh the alerts data

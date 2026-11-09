@@ -61,8 +61,8 @@ export interface IgnoreListItem {
   id: string;
   src_ip: string;
   dst_ip: string;
-  dst_port: number;
-  protocol: number;
+  dst_port: number | "*";
+  protocol: string | number;
   times_seen: number;
   first_seen: string;
   last_seen: string;

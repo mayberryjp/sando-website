@@ -1,4 +1,6 @@
 import api from "./api";
+import { isAxiosError } from "axios";
+import { normalizeRulePort } from "@/utils/port";
 
 export const getRecentAlerts = async () => {
   try {
@@ -74,15 +76,27 @@ export interface WhitelistPayload {
   dst_ip: string;
   src_port?: string | number;
   dst_port: string | number;
-  protocol: string;
+  protocol: string | number;
 }
 
 export const addToWhitelist = async (payload: WhitelistPayload) => {
   try {
-    const response = await api.post("/ignorelist", payload);
+    const response = await api.post("/ignorelist", {
+      ...payload,
+      dst_port: normalizeRulePort(payload.dst_port),
+      ...(payload.src_port !== undefined
+        ? { src_port: normalizeRulePort(payload.src_port, "Source port") }
+        : {}),
+    });
     return response.data;
   } catch (error) {
     console.error("Error adding to ignorelist:", error);
+    if (
+      isAxiosError<{ error?: unknown }>(error) &&
+      typeof error.response?.data?.error === "string"
+    ) {
+      throw new Error(error.response.data.error);
+    }
     throw error;
   }
 };

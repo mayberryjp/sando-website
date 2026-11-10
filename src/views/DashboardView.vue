@@ -36,7 +36,7 @@
     <v-row>
       <v-col cols="12">
         <RecentAlerts
-          :alerts="recentAlerts"
+          :alerts="hosts.alertsRecent"
           :loading="alertsLoading"
           :show-refresh-button="true"
           :show-time-filter="true"
@@ -114,14 +114,6 @@ const statusStats = computed(() => [
     color: "text-red",
   },
 ]);
-
-// Sort all recent alerts; the table handles filtering and pagination locally.
-const recentAlerts = computed(() => {
-  return [...hosts.alertsRecent].sort(
-    (a, b) =>
-      new Date(b.last_seen).getTime() - new Date(a.last_seen).getTime()
-  );
-});
 
 // Function to refresh the alerts data
 const refreshAlerts = async () => {

@@ -31,7 +31,8 @@ npm run build
 npm test
 ```
 
-Port validation and ignore-list request regression tests use Node's built-in test runner.
+Detection dataset, port validation, and ignore-list request regression tests use
+Node's built-in test runner.
 
 ## Preview Production Build
 
@@ -53,9 +54,11 @@ shown as notifications. Configure networks in Local Networks Configuration.
 
 ## Dashboard detections
 
-The dashboard loads the full list from `GET /api/alerts/recent`, sorts it by
-last seen, and filters and paginates it locally. The table defaults to 50 rows
-per page, not 50 detections total. Time filters apply to the full loaded list.
+The dashboard loads all stored alerts from `GET /api/alerts/recent` without
+`limit` or `offset`, preserving the API's newest-first `first_seen` ordering
+and `id` tie-breaker. Time filters apply to the full loaded list using
+`first_seen`; only the table paginates, at 50 rows per page by default.
+There is no 50- or 100-detection dataset cap, so later pages remain accessible.
 
 ## Allow-list ports
 

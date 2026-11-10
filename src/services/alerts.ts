@@ -1,10 +1,11 @@
 import api from "./api";
 import { isAxiosError } from "axios";
 import { normalizeRulePort } from "@/utils/port";
+import type { Alert } from "@/types/alerts";
 
-export const getRecentAlerts = async () => {
+export const getRecentAlerts = async (): Promise<Alert[]> => {
   try {
-    const response = await api.get("/alerts/recent");
+    const response = await api.get<Alert[]>("/alerts/recent");
     return response.data;
   } catch (error) {
     console.error("Error fetching recent alerts:", error);
